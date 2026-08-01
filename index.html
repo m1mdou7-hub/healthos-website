@@ -669,17 +669,18 @@
   }
   requestAnimationFrame(deviceLoop);
 
-  // ---------- smooth-scroll lag (visual glide, real scroll untouched — safe for a11y & anchors) ----------
-  var scrollContent = document.getElementById('scrollContent');
-  var realY = window.scrollY, smoothY = window.scrollY;
-  window.addEventListener('scroll', function(){ realY = window.scrollY; }, {passive:true});
-  function smoothScrollLoop(){
-    smoothY += (realY-smoothY)*0.09;
-    var diff = realY - smoothY;
-    scrollContent.style.transform = 'translateY('+diff.toFixed(2)+'px)';
-    requestAnimationFrame(smoothScrollLoop);
-  }
-  requestAnimationFrame(smoothScrollLoop);
+  // ---------- smooth-scroll lag DISABLED for performance ----------
+  // Re-enable by removing these comments if needed
+  // var scrollContent = document.getElementById('scrollContent');
+  // var realY = window.scrollY, smoothY = window.scrollY;
+  // window.addEventListener('scroll', function(){ realY = window.scrollY; }, {passive:true});
+  // function smoothScrollLoop(){
+  //   smoothY += (realY-smoothY)*0.09;
+  //   var diff = realY - smoothY;
+  //   scrollContent.style.transform = 'translateY('+diff.toFixed(2)+'px)';
+  //   requestAnimationFrame(smoothScrollLoop);
+  // }
+  // requestAnimationFrame(smoothScrollLoop);
 
   // ---------- reveals (IntersectionObserver, no GSAP) ----------
   function initReveals(){
