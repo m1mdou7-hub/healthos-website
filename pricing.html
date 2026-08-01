@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>التسعير — HealthOS</title>
+<meta name="description" content="باقات HealthOS تناسب جميع العيادات: من العيادات الصغيرة إلى المنظمات متعددة الفروع. ابدأ تجربتك المجانية اليوم." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23cba135'/><text x='16' y='21' text-anchor='middle' fill='%23000' font-size='14' font-weight='bold'>H</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;
+  --glass: rgba(255,255,255,.06);
+  --glass-strong: rgba(255,255,255,.10);
+  --border: rgba(255,255,255,.12);
+  --border-strong: rgba(255,255,255,.20);
+  --text:#ffffff;
+  --text-2: rgba(255,255,255,.65);
+  --text-3: rgba(255,255,255,.40);
+  --accent:#cba135;
+  --accent-soft: rgba(203,161,53,.16);
+  --success: #22c55e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg); overflow-x:hidden;}
+body{color:var(--text); font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:400; line-height:1.6;}
+::selection{background:rgba(255,255,255,.2);}
+.mono{font-family:'IBM Plex Mono', monospace; direction:ltr; unicode-bidi:plaintext;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit;}
+.wrap{max-width:1240px; margin:0 auto; padding:0 20px;}
+@media (min-width:640px){ .wrap{padding:0 32px;} }
+@media (min-width:768px){ .wrap{padding:0 48px;} }
+
+header{position:fixed; top:0; right:0; left:0; z-index:500; padding:22px 0;}
+.navbar{display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-radius:14px; border:1px solid transparent; transition:.4s;}
+.logo{font-weight:600; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
+.logo .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+nav.links{display:flex; gap:32px; font-size:14px; color:var(--text-2);}
+nav.links a{position:relative; transition:color .3s;}
+nav.links a:hover, nav.links a.active{color:#fff;}
+nav.links a.active::after{content:''; position:absolute; bottom:-4px; right:0; left:0; height:2px; background:var(--accent); border-radius:2px;}
+.mobile-menu-btn{display:none; background:none; border:none; color:#fff; font-size:24px; cursor:pointer; padding:8px;}
+@media (max-width:900px){ nav.links{gap:20px; font-size:13px;} }
+@media (max-width:700px){
+  nav.links{display:none; position:absolute; top:100%; right:0; left:0; flex-direction:column; gap:0; background:rgba(5,5,5,.95); backdrop-filter:blur(16px); padding:16px; border-radius:14px; margin-top:8px;}
+  nav.links.open{display:flex;}
+  nav.links a{padding:12px 0; border-bottom:1px solid var(--border);}
+  .mobile-menu-btn{display:block;}
+}
+
+section{padding:100px 0; position:relative;}
+section:first-of-type{padding-top:160px;}
+
+.kicker{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.25em; color:var(--accent); text-transform:uppercase; margin-bottom:16px;}
+h1{font-size:clamp(32px,5vw,56px); font-weight:600; line-height:1.15; letter-spacing:-.01em; margin-bottom:20px;}
+h2{font-size:clamp(24px,3.5vw,36px); font-weight:600; line-height:1.2; letter-spacing:-.01em;}
+.subtitle{color:var(--text-2); font-size:18px; max-width:600px;}
+
+.glass{background:var(--glass); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border);}
+.glass-strong{background:var(--glass-strong); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border-strong);}
+
+.btn{display:inline-flex; align-items:center; gap:10px; font-size:14px; transition:background .3s, color .3s, border-color .3s, transform .2s; cursor:pointer;}
+.btn-primary{background:#fff; color:#000; padding:14px 28px; border-radius:999px; font-weight:500; border:none;}
+.btn-primary:hover{background:rgba(255,255,255,.85); transform:translateY(-1px);}
+.btn-ghost{padding:14px 26px; border-radius:999px; border:1px solid var(--border-strong); background:var(--glass); backdrop-filter:blur(12px); color:var(--text);}
+.btn-ghost:hover{background:var(--glass-strong);}
+
+.toggle-wrap{display:flex; align-items:center; justify-content:center; gap:12px; margin:40px 0;}
+.toggle{width:52px; height:28px; background:var(--glass-strong); border-radius:20px; position:relative; cursor:pointer; transition:background .3s; border:1px solid var(--border);}
+.toggle.active{background:var(--accent);}
+.toggle::after{content:''; position:absolute; width:22px; height:22px; background:#fff; border-radius:50%; top:2px; right:2px; transition:transform .3s;}
+.toggle.active::after{transform:translateX(-24px);}
+.save-badge{background:var(--accent-soft); color:var(--accent); padding:4px 12px; border-radius:20px; font-size:12px; font-weight:500;}
+
+.plans-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px; margin-top:60px;}
+.plan-card{border-radius:20px; padding:32px; display:flex; flex-direction:column; gap:24px; transition:transform .3s, box-shadow .3s;}
+.plan-card:hover{transform:translateY(-4px);}
+.plan-card.featured{border:2px solid var(--accent); position:relative;}
+.plan-card.featured::before{content:'الأكثر شعبية'; position:absolute; top:-12px; right:24px; background:var(--accent); color:#000; padding:4px 16px; border-radius:20px; font-size:12px; font-weight:600;}
+.plan-header{border-bottom:1px solid var(--border); padding-bottom:20px;}
+.plan-name{font-size:20px; font-weight:600; margin-bottom:8px;}
+.plan-desc{color:var(--text-2); font-size:14px;}
+.plan-price{display:flex; align-items:baseline; gap:6px; margin-top:16px;}
+.price-amount{font-size:42px; font-weight:700;}
+.price-currency{font-size:18px; color:var(--text-2);}
+.price-period{color:var(--text-2); font-size:14px;}
+
+.features-list{display:flex; flex-direction:column; gap:14px; flex:1;}
+.feat-item{display:flex; align-items:flex-start; gap:12px; font-size:14px; color:var(--text-2);}
+.feat-item svg{width:20px; height:20px; flex-shrink:0; margin-top:2px;}
+.feat-item.disabled{opacity:0.4;}
+.feat-item.disabled svg{stroke:#666;}
+
+.plan-footer{margin-top:auto;}
+.plan-footer .btn{width:100%; justify-content:center;}
+
+.comparison-table{overflow-x:auto; margin-top:80px;}
+table{width:100%; border-collapse:collapse; min-width:600px;}
+th,td{padding:16px; text-align:right; border-bottom:1px solid var(--border);}
+th{font-size:12px; color:var(--text-2); font-weight:500; text-transform:uppercase; letter-spacing:.1em;}
+td{font-size:14px;}
+th:first-child, td:first-child{text-align:right;}
+.check{color:var(--success);}
+.cross{color:#666;}
+
+.faq-section{margin-top:80px;}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{display:flex; align-items:center; justify-content:space-between; padding:20px 0; cursor:pointer; font-weight:500; font-size:16px;}
+.faq-q svg{transition:transform .3s; flex-shrink:0;}
+.faq-item.open .faq-q svg{transform:rotate(180deg);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height .4s ease; color:var(--text-2); font-size:14px; line-height:1.8;}
+.faq-item.open .faq-a{max-height:300px;}
+.faq-a p{padding-bottom:20px;}
+
+.cta-section{text-align:center; padding:100px 0;}
+.cta-section h2{margin-bottom:16px;}
+.cta-section p{color:var(--text-2); margin-bottom:32px; font-size:18px;}
+.cta-buttons{display:flex; gap:16px; justify-content:center; flex-wrap:wrap;}
+
+footer{background:var(--glass); border-top:1px solid var(--border); padding:60px 0 30px; margin-top:80px;}
+.footer-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+@media(max-width:768px){ .footer-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:480px){ .footer-grid{grid-template-columns:1fr;} }
+.footer-brand p{color:var(--text-2); font-size:14px; margin-top:16px; max-width:300px;}
+.footer-col h4{font-size:14px; font-weight:600; margin-bottom:16px; color:var(--text-2); text-transform:uppercase; letter-spacing:.1em;}
+.footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+.footer-col a{color:var(--text-2); font-size:14px; transition:color .3s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid var(--border); padding-top:30px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; color:var(--text-2); font-size:13px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <a href="index.html" class="logo"><span class="dot"></span>Health<span>OS</span></a>
+      <button class="mobile-menu-btn" aria-label="القائمة">☰</button>
+      <nav class="links">
+        <a href="index.html">الرئيسية</a>
+        <a href="features.html">الميزات</a>
+        <a href="pricing.html" class="active">التسعير</a>
+        <a href="blog.html">المدونة</a>
+        <a href="faq.html">الأسئلة</a>
+      </nav>
+      <a href="#" data-nexa-plan="trial" class="btn btn-primary">ابدأ مجاناً</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section>
+  <div class="wrap">
+    <div class="kicker">التسعير</div>
+    <h1>اختر الباقة المناسبة لعيادتك</h1>
+    <p class="subtitle">جميع الباقات تشمل تجربة مجانية 14 يوم. لا بطاقة ائتمان مطلوبة.</p>
+    
+    <div class="toggle-wrap">
+      <span class="save-badge">وفر 20%</span>
+      <div class="toggle" id="billingToggle"></div>
+      <span style="color:var(--text-2); font-size:14px;">دفع سنوي</span>
+    </div>
+
+    <div class="plans-grid">
+      <!-- Starter -->
+      <div class="plan-card glass">
+        <div class="plan-header">
+          <div class="plan-name">ستاندرد</div>
+          <div class="plan-desc">للعيادات الصغيرة التي تبدأ رحلتها الرقمية</div>
+          <div class="plan-price">
+            <span class="price-currency">ر.س</span>
+            <span class="price-amount" data-monthly="149" data-yearly="119">149</span>
+            <span class="price-period">/ شهرياً</span>
+          </div>
+        </div>
+        <div class="features-list">
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> até 1,000 موعد شهرياً</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> ملف مريض واحد</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> إدارة المواعيد</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> الفوترة الأساسية</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> دعم عبر البريد</div>
+          <div class="feat-item disabled"><svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> فروع متعددة</div>
+          <div class="feat-item disabled"><svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> تقارير متقدمة</div>
+        </div>
+        <div class="plan-footer">
+          <a href="#" data-nexa-plan="standard" class="btn btn-ghost">ابدأ تجريبياً</a>
+        </div>
+      </div>
+
+      <!-- Professional -->
+      <div class="plan-card glass featured">
+        <div class="plan-header">
+          <div class="plan-name">برو</div>
+          <div class="plan-desc">لعيادات النمو التي تحتاج إدارة متكاملة</div>
+          <div class="plan-price">
+            <span class="price-currency">ر.س</span>
+            <span class="price-amount" data-monthly="399" data-yearly="319">399</span>
+            <span class="price-period">/ شهرياً</span>
+          </div>
+        </div>
+        <div class="features-list">
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> até 5,000 موعد شهرياً</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> ملفات مرضى غير محدودة</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> جميع الميزات المتقدمة</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> سجلات سريرية SOAP</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> دعم أولوي 24/7</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> hasta 3 فروع</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> تقارير متقدمة</div>
+        </div>
+        <div class="plan-footer">
+          <a href="#" data-nexa-plan="pro" class="btn btn-primary">اشترك الآن</a>
+        </div>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="plan-card glass">
+        <div class="plan-header">
+          <div class="plan-name">مؤسسي</div>
+          <div class="plan-desc">للمنظمات الكبيرة مع احتياجات متخصصة</div>
+          <div class="plan-price">
+            <span class="price-currency">ر.س</span>
+            <span class="price-amount">مخصص</span>
+          </div>
+        </div>
+        <div class="features-list">
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> مواعيد غير محدودة</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> فروع غير محدودة</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> تكامل API مخصص</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> مدير حساب مخصص</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> تدريب الفريق</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> SLA مضمون</div>
+          <div class="feat-item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg> تصدير بيانات كامل</div>
+        </div>
+        <div class="plan-footer">
+          <a href="contact.html" class="btn btn-ghost">تواصل معنا</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 style="text-align:center; margin-bottom:40px;">مقارنة الميزات</h2>
+    <div class="comparison-table glass" style="border-radius:16px;">
+      <table>
+        <thead>
+          <tr>
+            <th>الميزة</th>
+            <th>ستاندرد</th>
+            <th>برو</th>
+            <th>مؤسسي</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>المواعيد الشهرية</td>
+            <td class="check">1,000</td>
+            <td class="check">5,000</td>
+            <td class="check">∞</td>
+          </tr>
+          <tr>
+            <td>الملفات المرضية</td>
+            <td class="check">محدودة</td>
+            <td class="check">∞</td>
+            <td class="check">∞</td>
+          </tr>
+          <tr>
+            <td>الفواتير</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>السجلات السريرية</td>
+            <td class="cross">—</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>الرسم السني</td>
+            <td class="cross">—</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>إدارة المخزون</td>
+            <td class="cross">—</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>التذكيرات التلقائية</td>
+            <td class="cross">—</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>التقارير المتقدمة</td>
+            <td class="cross">—</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+          </tr>
+          <tr>
+            <td>الفروع المتعددة</td>
+            <td class="cross">—</td>
+            <td class="check">حتى 3</td>
+            <td class="check">∞</td>
+          </tr>
+          <tr>
+            <td>الدعم</td>
+            <td>بريد</td>
+            <td>24/7</td>
+            <td>مخصص</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 style="text-align:center; margin-bottom:40px;">الأسئلة الشائعة</h2>
+    <div class="faq-section" style="max-width:800px; margin:0 auto;">
+      <div class="faq-item glass" style="padding:0 24px; border-radius:12px; margin-bottom:12px;">
+        <div class="faq-q">هل يمكنني تغيير الباقة لاحقاً؟<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، يمكنك الترقية أو التخفيض في أي وقت. التغييرات تُطبق من الدورة التالية للدفع.</p></div>
+      </div>
+      <div class="faq-item glass" style="padding:0 24px; border-radius:12px; margin-bottom:12px;">
+        <div class="faq-q">ماذا يحدث عند انتهاء التجربة المجانية؟<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>لن تُ-charged أي مبالغ. يمكنك اختيار الباقة المناسبة أو إلغاء الاشتراك دون أي التزامات.</p></div>
+      </div>
+      <div class="faq-item glass" style="padding:0 24px; border-radius:12px; margin-bottom:12px;">
+        <div class="faq-q">هل البيانات آمنة؟<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، جميع البيانات مشفرة بـ AES-256 ومخبأة في سيرفرات آمنة متوافقة مع معايير HIPAA.</p></div>
+      </div>
+      <div class="faq-item glass" style="padding:0 24px; border-radius:12px; margin-bottom:12px;">
+        <div class="faq-q">هل يوجد تطبيق للجوال؟<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، تطبيق iOS و Android يوفران جميع الميزات الأساسية مع واجهة محسّنة للشاشات الصغيرة.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="wrap">
+    <h2>ابدأ تجربتك المجانية اليوم</h2>
+    <p>14 يوم مجاناً. بدون بطاقة ائتمان. الغي متى ما تبي.</p>
+    <div class="cta-buttons">
+      <a href="#" data-nexa-plan="trial" class="btn btn-primary">ابدأ مجاناً</a>
+      <a href="contact.html" class="btn btn-ghost">تواصل معنا</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="dot"></span>Health<span>OS</span></div>
+        <p>نظام تشغيل متكامل لإدارة عيادتك بكفاءة واحترافية.</p>
+      </div>
+      <div class="footer-col">
+        <h4>المنتج</h4>
+        <ul>
+          <li><a href="features.html">الميزات</a></li>
+          <li><a href="pricing.html">التسعير</a></li>
+          <li><a href="faq.html">الأسئلة</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>الشركة</h4>
+        <ul>
+          <li><a href="about.html">من نحن</a></li>
+          <li><a href="contact.html">تواصل معنا</a></li>
+          <li><a href="privacy.html">الخصوصية</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>المدونة</h4>
+        <ul>
+          <li><a href="blog.html">المقالات</a></li>
+          <li><a href="blog.html#tips">نصائح</a></li>
+          <li><a href="blog.html#updates">التحديثات</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 HealthOS. جميع الحقوق محفوظة.</span>
+      <div style="display:flex; gap:20px;">
+        <a href="privacy.html">سياسة الخصوصية</a>
+        <a href="terms.html">الشروط والأحكام</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Mobile menu
+  var menuBtn = document.querySelector('.mobile-menu-btn');
+  var navLinks = document.querySelector('nav.links');
+  if(menuBtn && navLinks){
+    menuBtn.addEventListener('click', function(){
+      navLinks.classList.toggle('open');
+      menuBtn.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    });
+  }
+
+  // Billing toggle
+  var toggle = document.getElementById('billingToggle');
+  var isYearly = false;
+  toggle.addEventListener('click', function(){
+    isYearly = !isYearly;
+    toggle.classList.toggle('active', isYearly);
+    document.querySelectorAll('.price-amount[data-monthly]').forEach(function(el){
+      el.textContent = isYearly ? el.dataset.yearly : el.dataset.monthly;
+    });
+  });
+
+  // Nexa buttons
+  var NEXA_LIVE = false;
+  var NEXA_BASE = "https://subscribe.nexa.app/checkout";
+  document.querySelectorAll('[data-nexa-plan]').forEach(function(el){
+    if(NEXA_LIVE){
+      el.href = NEXA_BASE + "?product=healthos&plan=" + el.dataset.nexaPlan;
+      el.target = '_blank';
+    }
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      var item = q.parentElement;
+      document.querySelectorAll('.faq-item').forEach(function(i){
+        if(i !== item) i.classList.remove('open');
+      });
+      item.classList.toggle('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>

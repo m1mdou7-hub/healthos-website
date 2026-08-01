@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>الأسئلة الشائعة — HealthOS</title>
+<meta name="description" content="إجابات على أكثر الأسئلة شيوعاً حول HealthOS. معلومات عن التسعير، الميزات، الدعم الفني، والمزيد." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23cba135'/><text x='16' y='21' text-anchor='middle' fill='%23000' font-size='14' font-weight='bold'>H</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;
+  --glass: rgba(255,255,255,.06);
+  --glass-strong: rgba(255,255,255,.10);
+  --border: rgba(255,255,255,.12);
+  --border-strong: rgba(255,255,255,.20);
+  --text:#ffffff;
+  --text-2: rgba(255,255,255,.65);
+  --text-3: rgba(255,255,255,.40);
+  --accent:#cba135;
+  --accent-soft: rgba(203,161,53,.16);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg); overflow-x:hidden;}
+body{color:var(--text); font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:400; line-height:1.6;}
+::selection{background:rgba(255,255,255,.2);}
+a{color:inherit; text-decoration:none;}
+.wrap{max-width:900px; margin:0 auto; padding:0 20px;}
+@media (min-width:640px){ .wrap{padding:0 32px;} }
+@media (min-width:768px){ .wrap{padding:0 48px;} }
+
+header{position:fixed; top:0; right:0; left:0; z-index:500; padding:22px 0;}
+.navbar{display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-radius:14px; border:1px solid transparent;}
+.logo{font-weight:600; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
+.logo .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+nav.links{display:flex; gap:32px; font-size:14px; color:var(--text-2);}
+nav.links a{position:relative; transition:color .3s;}
+nav.links a:hover, nav.links a.active{color:#fff;}
+nav.links a.active::after{content:''; position:absolute; bottom:-4px; right:0; left:0; height:2px; background:var(--accent); border-radius:2px;}
+.mobile-menu-btn{display:none; background:none; border:none; color:#fff; font-size:24px; cursor:pointer; padding:8px;}
+@media (max-width:700px){
+  nav.links{display:none; position:absolute; top:100%; right:0; left:0; flex-direction:column; gap:0; background:rgba(5,5,5,.95); backdrop-filter:blur(16px); padding:16px; border-radius:14px; margin-top:8px;}
+  nav.links.open{display:flex;}
+  nav.links a{padding:12px 0; border-bottom:1px solid var(--border);}
+  .mobile-menu-btn{display:block;}
+}
+
+section{padding:100px 0; position:relative;}
+section:first-of-type{padding-top:160px;}
+
+.kicker{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.25em; color:var(--accent); text-transform:uppercase; margin-bottom:16px;}
+h1{font-size:clamp(32px,5vw,56px); font-weight:600; line-height:1.15; letter-spacing:-.01em; margin-bottom:20px;}
+h2{font-size:clamp(22px,3vw,32px); font-weight:600; line-height:1.2; letter-spacing:-.01em;}
+.subtitle{color:var(--text-2); font-size:18px; max-width:600px;}
+
+.glass{background:var(--glass); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border);}
+
+.btn{display:inline-flex; align-items:center; gap:10px; font-size:14px; transition:background .3s, color .3s, border-color .3s, transform .2s; cursor:pointer;}
+.btn-primary{background:#fff; color:#000; padding:14px 28px; border-radius:999px; font-weight:500; border:none;}
+.btn-primary:hover{background:rgba(255,255,255,.85); transform:translateY(-1px);}
+.btn-ghost{padding:14px 26px; border-radius:999px; border:1px solid var(--border-strong); background:var(--glass); backdrop-filter:blur(12px); color:var(--text);}
+.btn-ghost:hover{background:var(--glass-strong);}
+
+.faq-nav{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:40px;}
+.faq-nav-btn{padding:10px 20px; border-radius:999px; background:var(--glass); border:1px solid var(--border); color:var(--text-2); font-size:14px; cursor:pointer; transition:all .3s;}
+.faq-nav-btn:hover, .faq-nav-btn.active{background:var(--accent); color:#000; border-color:var(--accent);}
+
+.faq-category{margin-bottom:60px;}
+.faq-category h2{margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border);}
+
+.faq-item{background:var(--glass); border:1px solid var(--border); border-radius:16px; margin-bottom:12px; overflow:hidden; transition:border-color .3s;}
+.faq-item:hover{border-color:var(--border-strong);}
+.faq-item.open{border-color:var(--accent);}
+.faq-q{display:flex; align-items:center; justify-content:space-between; padding:20px 24px; cursor:pointer; font-weight:500; font-size:16px; gap:16px;}
+.faq-q svg{width:20px; height:20px; flex-shrink:0; transition:transform .3s; color:var(--accent);}
+.faq-item.open .faq-q svg{transform:rotate(180deg);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height .4s ease; color:var(--text-2); font-size:15px; line-height:1.8;}
+.faq-item.open .faq-a{max-height:500px;}
+.faq-a p{padding:0 24px 24px;}
+
+.contact-card{background:var(--glass-strong); border:1px solid var(--border); border-radius:20px; padding:40px; text-align:center; margin-top:60px;}
+.contact-card h3{font-size:24px; margin-bottom:16px;}
+.contact-card p{color:var(--text-2); margin-bottom:24px;}
+.contact-cards{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-top:32px;}
+.contact-item{background:var(--glass); border-radius:12px; padding:24px; display:flex; flex-direction:column; align-items:center; gap:12px;}
+.contact-item svg{width:32px; height:32px; color:var(--accent);}
+.contact-item strong{font-size:16px;}
+.contact-item span{color:var(--text-2); font-size:14px;}
+
+footer{background:var(--glass); border-top:1px solid var(--border); padding:60px 0 30px; margin-top:80px;}
+.footer-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+@media(max-width:768px){ .footer-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:480px){ .footer-grid{grid-template-columns:1fr;} }
+.footer-brand p{color:var(--text-2); font-size:14px; margin-top:16px; max-width:300px;}
+.footer-col h4{font-size:14px; font-weight:600; margin-bottom:16px; color:var(--text-2); text-transform:uppercase; letter-spacing:.1em;}
+.footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+.footer-col a{color:var(--text-2); font-size:14px; transition:color .3s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid var(--border); padding-top:30px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; color:var(--text-2); font-size:13px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <a href="index.html" class="logo"><span class="dot"></span>Health<span>OS</span></a>
+      <button class="mobile-menu-btn" aria-label="القائمة">☰</button>
+      <nav class="links">
+        <a href="index.html">الرئيسية</a>
+        <a href="features.html">الميزات</a>
+        <a href="pricing.html">التسعير</a>
+        <a href="blog.html">المدونة</a>
+        <a href="faq.html" class="active">الأسئلة</a>
+      </nav>
+      <a href="#" data-nexa-plan="trial" class="btn btn-primary">ابدأ مجاناً</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section>
+  <div class="wrap">
+    <div class="kicker">الأسئلة الشائعة</div>
+    <h1>إجابات على أسئلتك</h1>
+    <p class="subtitle">نجمع هنا أكثر الأسئلة شيوعاً. إذا ما وجدت إجابة لسؤالك، تواصل معنا مباشرة.</p>
+
+    <div class="faq-nav">
+      <button class="faq-nav-btn active" data-target="all">الكل</button>
+      <button class="faq-nav-btn" data-target="general">عامة</button>
+      <button class="faq-nav-btn" data-target="pricing">التسعير</button>
+      <button class="faq-nav-btn" data-target="features">الميزات</button>
+      <button class="faq-nav-btn" data-target="technical">تقني</button>
+      <button class="faq-nav-btn" data-target="support">الدعم</button>
+    </div>
+
+    <!-- عامة -->
+    <div class="faq-category" data-category="general">
+      <h2>أسئلة عامة</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">ما هو HealthOS؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>HealthOS هو نظام إدارة عيادات متكامل يساعدك على إدارة المرضى والمواعيد والسجلات السريرية والفوترة والمخزون من مكان واحد. يعمل على جميع الأجهزة: الكمبيوتر، التابلت، والجوال.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يناسب HealthOS لجميع التخصصات؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، تم تصميم HealthOS ليكون مرناً ويعمل مع جميع التخصصات الطبية: طب الأسنان، العيون، الجلدية، العظام، الأطفال، وغيرها. قوالب SOAP قابلة للتخصيص حسب تخصصك.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكنني تجربة HealthOS قبل الاشتراك؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>بالتأكيد! نقدم تجربة مجانية 14 يوماً بدون بطاقة ائتمان. يمكنك تجربة جميع الميزات وإلغاء الاشتراك متى ما تريد.</p></div>
+      </div>
+    </div>
+
+    <!-- التسعير -->
+    <div class="faq-category" data-category="pricing">
+      <h2>التسعير والدفع</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">كم تكلفة HealthOS؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نقدم ثلاث باقات: ستاندرد (149 ر.س/شهر)، برو (399 ر.س/شهر)، ومؤسسي (سعر مخصص). الدفع السنوي يوفر 20%. <a href="pricing.html" style="color:var(--accent);">عرض الأسعار</a></p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يوجد رسوم إضافية؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>لا، السعر شامل كل شيء. لا رسوم إعداد، لا رسوم خفية، ولا تكاليف إضافية للميزات المشمولة في باقتك.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">ما هي طرق الدفع المتاحة؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نقبل الدفع بالفيزا، ماستركارد، مدى، والتحويل البنكي. الدفع الشهري عبر البطاقة فقط.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكنني تغيير الباقة أو الإلغاء؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، يمكنك الترقية أو التخفيض في أي وقت. يمكنك أيضاً إلغاء الاشتراك متى ما تريد دون أي رسوم إلغاء.</p></div>
+      </div>
+    </div>
+
+    <!-- الميزات -->
+    <div class="faq-category" data-category="features">
+      <h2>الميزات والاستخدام</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">هل يوجد تطبيق للجوال؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، تطبيقات iOS و Android متاحة مجاناً. توفر جميع الميزات الأساسية مع واجهة محسّنة للشاشات الصغيرة.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكن إرسال تذكيرات للمواعيد؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، يمكن إرسال تذكيرات SMS و WhatsApp تلقائياً قبل الموعد. يمكنك تخصيص وقت التذكير (24 ساعة، ساعة، 30 دقيقة قبل).</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يدعم النظام اللغة العربية بالكامل؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، HealthOS مصمم عربياً من الألف إلى الياء. واجهة RTL كاملة، تواريخ هجرية، عملات محلية، وطباعة بالعربي.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكن تصدير التقارير؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، جميع التقارير قابلة للتصدير بتنسيقات PDF و Excel و CSV.</p></div>
+      </div>
+    </div>
+
+    <!-- تقني -->
+    <div class="faq-category" data-category="technical">
+      <h2>الأسئلة التقنية</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">هل البيانات آمنة؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، نعتمد معايير أمان عالية: تشفير AES-256، نسخ احتياطي يومي، وتوافق مع معايير HIPAA لحماية البيانات الصحية.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يحتاج النظام اتصال إنترنت؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، HealthOS يعمل عبر السحابة (Cloud). تحتاج اتصال إنترنت للوصول لبياناتك. التطبيق يدعم وضع offline محدود للعرض فقط.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكن التكامل مع أنظمة أخرى؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، نقدم API للتكامل مع الأنظمة الأخرى. التكامل مع الصيدليات والمختبرات والأشعة متاح في الباقات المتقدمة.</p></div>
+      </div>
+    </div>
+
+    <!-- الدعم -->
+    <div class="faq-category" data-category="support">
+      <h2>الدعم الفني</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">كيف يمكنني التواصل مع الدعم؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نقدم دعماً عبر البريد الإلكتروني والدردشة المباشرة. باقة البرو تحصل على دعم 24/7.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل تقدمون تدريب على النظام؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، نقدم فيديوهات تعليمية ومقالات في مركز المساعدة. الباقة المؤسسية تحصل على تدريب مباشر للفريق.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">ماذا لو فقدت بيانات؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>لديك نسخ احتياطي يومي. في حالة فقدان بيانات، يمكننا استرجاعها من آخر نسخة احتياطية. انتقد مركز المساعدة فوراً.</p></div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <h3>لم تجد إجابة لسؤالك؟</h3>
+      <p>فريقنا جاهز لمساعدتك. تواصل معنا وسنرد خلال 24 ساعة.</p>
+      <div class="contact-cards">
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <strong>البريد الإلكتروني</strong>
+          <span>support@healthos.app</span>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <strong>الدردشة المباشرة</strong>
+          <span>متاحة 24/7</span>
+        </div>
+        <div class="contact-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <strong>الهاتف</strong>
+          <span>+966 XX XXX XXXX</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="dot"></span>Health<span>OS</span></div>
+        <p>نظام تشغيل متكامل لإدارة عيادتك بكفاءة واحترافية.</p>
+      </div>
+      <div class="footer-col">
+        <h4>المنتج</h4>
+        <ul>
+          <li><a href="features.html">الميزات</a></li>
+          <li><a href="pricing.html">التسعير</a></li>
+          <li><a href="faq.html">الأسئلة</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>الشركة</h4>
+        <ul>
+          <li><a href="about.html">من نحن</a></li>
+          <li><a href="contact.html">تواصل معنا</a></li>
+          <li><a href="privacy.html">الخصوصية</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>المدونة</h4>
+        <ul>
+          <li><a href="blog.html">المقالات</a></li>
+          <li><a href="blog.html#tips">نصائح</a></li>
+          <li><a href="blog.html#updates">التحديثات</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 HealthOS. جميع الحقوق محفوظة.</span>
+      <div style="display:flex; gap:20px;">
+        <a href="privacy.html">سياسة الخصوصية</a>
+        <a href="terms.html">الشروط والأحكام</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var menuBtn = document.querySelector('.mobile-menu-btn');
+  var navLinks = document.querySelector('nav.links');
+  if(menuBtn && navLinks){
+    menuBtn.addEventListener('click', function(){
+      navLinks.classList.toggle('open');
+      menuBtn.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    });
+  }
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      var item = q.parentElement;
+      var isOpen = item.classList.contains('open');
+      
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(function(i){
+        i.classList.remove('open');
+      });
+      
+      // Toggle current
+      if(!isOpen){
+        item.classList.add('open');
+      }
+    });
+  });
+
+  // Category filter
+  var navBtns = document.querySelectorAll('.faq-nav-btn');
+  var categories = document.querySelectorAll('.faq-category');
+  
+  navBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      navBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      var target = btn.dataset.target;
+      
+      categories.forEach(function(cat){
+        if(target === 'all' || cat.dataset.category === target){
+          cat.style.display = '';
+        } else {
+          cat.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  var NEXA_LIVE = false;
+  document.querySelectorAll('[data-nexa-plan]').forEach(function(el){
+    if(NEXA_LIVE){
+      el.href = "https://subscribe.nexa.app/checkout?product=healthos&plan=" + el.dataset.nexaPlan;
+      el.target = '_blank';
+    }
+  });
+})();
+</script>
+</body>
+</html>

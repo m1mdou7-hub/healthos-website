@@ -5,9 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HealthOS — نظام تشغيل عيادتك</title>
 <meta name="description" content="HealthOS — نظام تشغيل صحي متعدد المنظمات، تطبيق حقيقي على الكمبيوتر والجوال والتابلت." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23cba135'/><text x='16' y='21' text-anchor='middle' fill='%23000' font-size='14' font-weight='bold'>H</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   /*
     ملاحظة تصميم: البروبمت المرجعي (NovaAI) يحدد خط Inter صراحة. أبقينا على
@@ -40,6 +43,16 @@
   .wrap{max-width:1240px; margin:0 auto; padding:0 20px;}
   @media (min-width:640px){ .wrap{padding:0 32px;} }
   @media (min-width:768px){ .wrap{padding:0 48px;} }
+  @media (max-width:900px){
+    nav.links{gap:20px; font-size:13px;}
+    .nav-actions .btn-sm{display:none;}
+  }
+  @media (max-width:700px){
+    nav.links{display:none; position:absolute; top:100%; right:0; left:0; flex-direction:column; gap:0; background:rgba(5,5,5,.95); backdrop-filter:blur(16px); padding:16px; border-radius:14px; margin-top:8px;}
+    nav.links.open{display:flex;}
+    nav.links a{padding:12px 0; border-bottom:1px solid var(--border);}
+    .mobile-menu-btn{display:block;}
+  }
   @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
 
   /* ---------- cursor ---------- */
@@ -84,7 +97,10 @@
   .logo .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
   nav.links{display:flex; gap:32px; font-size:14px; color:var(--text-2);}
   nav.links a{position:relative; transition:color .3s;}
-  nav.links a:hover{color:#fff;}
+  nav.links a:hover, nav.links a.active{color:#fff;}
+  nav.links a.active::after{content:''; position:absolute; bottom:-4px; right:0; left:0; height:2px; background:var(--accent); border-radius:2px;}
+  .nav-actions{display:flex; align-items:center; gap:12px;}
+  .mobile-menu-btn{display:none; background:none; border:none; color:#fff; font-size:24px; cursor:pointer; padding:8px;}
 
   #scrollContent{will-change:transform;}
 
@@ -266,13 +282,14 @@
 <header id="siteHeader">
   <div class="wrap">
     <div class="navbar">
-      <div class="logo"><span class="dot"></span>Health<span>OS</span></div>
+      <a href="index.html" class="logo"><span class="dot"></span>Health<span>OS</span></a>
+      <button class="mobile-menu-btn" aria-label="القائمة">☰</button>
       <nav class="links">
-        <a href="#capability">المنصة</a>
-        <a href="#features">المزايا</a>
-        <a href="#process">كيف يعمل</a>
-        <a href="#pricing">الاشتراك</a>
-        <a href="#contact">تواصل</a>
+        <a href="index.html">الرئيسية</a>
+        <a href="features.html">الميزات</a>
+        <a href="pricing.html">التسعير</a>
+        <a href="blog.html">المدونة</a>
+        <a href="faq.html">الأسئلة</a>
       </nav>
       <a href="#" data-nexa-plan="trial" class="btn btn-sm">ابدأ تجربة مجانية</a>
     </div>
@@ -486,7 +503,17 @@
 
 <script>
 (function(){
-  // ====== Nexa لسه ما أُطلق. بمجرد الإطلاق: NEXA_LIVE = true + رابطه الحقيقي ======
+  // ====== Supabase Configuration ======
+  // للتشغيل: أنشئ مشروع Supabase وأنشئ جدول newsletter_subscribers
+  // ثم استبدل القيمتين أدناه
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // مثل: https://xxxxx.supabase.co
+  const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY'; // المفتاح العام من Supabase
+  let supabase = null;
+  if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  }
+
+  // ====== Nexa Configuration ======
   var NEXA_LIVE = false;
   var NEXA_BASE = "https://subscribe.nexa.app/checkout";
   function nexaUrl(plan){ return NEXA_BASE + "?product=healthos&plan=" + encodeURIComponent(plan); }
@@ -507,11 +534,44 @@
   csModal.addEventListener('click', function(e){
     if(e.target.hasAttribute('data-close')){ csModal.classList.remove('open'); document.body.style.overflow=''; }
   });
-  document.getElementById('csForm').addEventListener('submit', function(e){
+
+  // ====== Email Subscription Handler ======
+  document.getElementById('csForm').addEventListener('submit', async function(e){
     e.preventDefault();
-    // ملاحظة: لا يوجد باك اند مربوط فعليًا هنا — اربطه لاحقًا بخدمة بريد أو جدول Supabase.
-    this.style.display = 'none';
-    document.getElementById('csDone').style.display = 'block';
+    var email = this.querySelector('input[type="email"]').value.trim();
+    var submitBtn = this.querySelector('button[type="submit"]');
+    var statusEl = document.getElementById('csDone');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الإرسال...';
+
+    try {
+      if (supabase) {
+        // حفظ في Supabase
+        const { error } = await supabase
+          .from('newsletter_subscribers')
+          .insert([{ email: email, subscribed_at: new Date().toISOString() }]);
+        if (error) throw error;
+      } else {
+        // حفظ محلي للتطوير
+        var subscribers = JSON.parse(localStorage.getItem('healthos_subscribers') || '[]');
+        if (!subscribers.includes(email)) {
+          subscribers.push(email);
+          localStorage.setItem('healthos_subscribers', JSON.stringify(subscribers));
+        }
+      }
+      this.style.display = 'none';
+      statusEl.textContent = '✓ تم التسجيل بنجاح! سنتواصل معك قريباً.';
+      statusEl.style.display = 'block';
+    } catch (err) {
+      this.style.display = 'none';
+      statusEl.innerHTML = '✗ حدث خطأ. حاول مرة أخرى.';
+      statusEl.style.display = 'block';
+      console.error(err);
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'أعلمني عند الإطلاق';
   });
 
   // ---------- feature rows (real modules) ----------
@@ -563,6 +623,19 @@
   // ---------- header on scroll ----------
   var header = document.getElementById('siteHeader');
   window.addEventListener('scroll', function(){ header.classList.toggle('solid', window.scrollY>40); });
+
+  // ---------- mobile menu ----------
+  var menuBtn = document.querySelector('.mobile-menu-btn');
+  var navLinks = document.querySelector('nav.links');
+  if(menuBtn && navLinks){
+    menuBtn.addEventListener('click', function(){
+      navLinks.classList.toggle('open');
+      menuBtn.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ navLinks.classList.remove('open'); menuBtn.textContent = '☰'; });
+    });
+  }
 
   // ---------- device stage: idle 3D float (always running) + mouse tilt blended on top ----------
   var stage = document.getElementById('deviceStage');
@@ -650,13 +723,11 @@
   })();
 
   // ---------- atmosphere canvas: scroll-reactive generative background ----------
-  // بديل لنظام الفيديو المُستَخدَم بالمرجع (لا يوجد أصل فيديو مرخّص لدينا) —
-  // نفس المبدأ التقني (تنعيم lerp + requestAnimationFrame + استجابة للسكرول)
-  // لكن عبر Canvas API بدل إطارات فيديو.
+  // Using Web Worker for better performance on lower-end devices
   var canvas = document.getElementById('atmosphere');
   var ctx = canvas.getContext('2d');
   var W, H, dpr;
-  var particles = [];
+  
   function resize(){
     dpr = Math.min(window.devicePixelRatio||1, 2);
     W = window.innerWidth; H = window.innerHeight;
@@ -667,6 +738,29 @@
   resize();
   window.addEventListener('resize', resize);
 
+  var scrollTarget=0;
+  window.addEventListener('scroll', function(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    scrollTarget = max>0 ? window.scrollY/max : 0;
+  });
+
+  // Try to use Web Worker for better performance
+  var worker = null;
+  try {
+    worker = new Worker('atmosphere-worker.js');
+    worker.onmessage = function(e) {
+      if(e.data.type === 'frame') {
+        drawAtmosphere(e.data.data.particles, e.data.data.scrollSmooth);
+      }
+    };
+    worker.postMessage({type: 'init', width: W, height: H, count: window.innerWidth < 700 ? 26 : 46});
+    worker.postMessage({type: 'resize', width: W, height: H});
+  } catch(e) {
+    // Fallback to main thread if worker not supported
+  }
+
+  // Fallback particle system (main thread)
+  var particles = [];
   var PCOUNT = window.innerWidth < 700 ? 26 : 46;
   for(var i=0;i<PCOUNT;i++){
     particles.push({
@@ -676,40 +770,72 @@
       gold: Math.random() < 0.22
     });
   }
-  var scrollTarget=0, scrollSmooth=0;
-  window.addEventListener('scroll', function(){
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    scrollTarget = max>0 ? window.scrollY/max : 0;
-  });
+  var scrollSmooth = 0;
 
-  function drawAtmosphere(){
-    scrollSmooth += (scrollTarget-scrollSmooth)*0.06;
+  function drawAtmosphere(particlesData, smooth) {
+    if(!particlesData) {
+      // Fallback: use main thread particles
+      scrollSmooth += (scrollTarget-scrollSmooth)*0.06;
+      particles.forEach(function(p){
+        p.x += p.vx; p.y += p.vy - scrollSmooth*0.02;
+        if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+        if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+      });
+      particlesData = particles;
+      smooth = scrollSmooth;
+    } else {
+      smooth = smooth;
+    }
+    
     ctx.clearRect(0,0,W,H);
 
-    // ambient glow blobs, drifting slowly, position tied to smoothed scroll
-    var g1 = ctx.createRadialGradient(W*0.75, H*(0.25+scrollSmooth*0.3), 0, W*0.75, H*(0.25+scrollSmooth*0.3), W*0.5);
+    var g1 = ctx.createRadialGradient(W*0.75, H*(0.25+smooth*0.3), 0, W*0.75, H*(0.25+smooth*0.3), W*0.5);
     g1.addColorStop(0, 'rgba(203,161,53,0.10)');
     g1.addColorStop(1, 'rgba(203,161,53,0)');
     ctx.fillStyle = g1; ctx.fillRect(0,0,W,H);
 
-    var g2 = ctx.createRadialGradient(W*0.2, H*(0.7-scrollSmooth*0.25), 0, W*0.2, H*(0.7-scrollSmooth*0.25), W*0.45);
+    var g2 = ctx.createRadialGradient(W*0.2, H*(0.7-smooth*0.25), 0, W*0.2, H*(0.7-smooth*0.25), W*0.45);
     g2.addColorStop(0, 'rgba(255,255,255,0.045)');
     g2.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = g2; ctx.fillRect(0,0,W,H);
 
-    particles.forEach(function(p){
-      p.x += p.vx; p.y += p.vy - scrollSmooth*0.02;
-      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
-      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+    particlesData.forEach(function(p){
       ctx.beginPath();
       ctx.fillStyle = p.gold ? 'rgba(203,161,53,0.55)' : 'rgba(255,255,255,0.35)';
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
       ctx.fill();
     });
-
-    requestAnimationFrame(drawAtmosphere);
   }
-  drawAtmosphere();
+
+  // Animation loop
+  function animationLoop() {
+    if(worker) {
+      worker.postMessage({type: 'update', scrollTarget: scrollTarget});
+    } else {
+      drawAtmosphere();
+    }
+    requestAnimationFrame(animationLoop);
+  }
+  animationLoop();
+  
+  // Lazy load images
+  if('IntersectionObserver' in window) {
+    var imageObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if(entry.isIntersecting) {
+          var img = entry.target;
+          if(img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+          imageObserver.unobserve(img);
+        }
+      });
+    });
+    document.querySelectorAll('img[data-src]').forEach(function(img) {
+      imageObserver.observe(img);
+    });
+  }
 })();
 </script>
 </body>

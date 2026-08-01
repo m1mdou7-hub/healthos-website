@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>من نحن — HealthOS</title>
+<meta name="description" content="تعرف على فريق HealthOS ورسالتنا في بناء حلول تقنية متكاملة لإدارة العيادات في المنطقة العربية." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23cba135'/><text x='16' y='21' text-anchor='middle' fill='%23000' font-size='14' font-weight='bold'>H</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;
+  --glass: rgba(255,255,255,.06);
+  --glass-strong: rgba(255,255,255,.10);
+  --border: rgba(255,255,255,.12);
+  --border-strong: rgba(255,255,255,.20);
+  --text:#ffffff;
+  --text-2: rgba(255,255,255,.65);
+  --text-3: rgba(255,255,255,.40);
+  --accent:#cba135;
+  --accent-soft: rgba(203,161,53,.16);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg); overflow-x:hidden;}
+body{color:var(--text); font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:400; line-height:1.6;}
+::selection{background:rgba(255,255,255,.2);}
+a{color:inherit; text-decoration:none;}
+.wrap{max-width:1100px; margin:0 auto; padding:0 20px;}
+@media (min-width:640px){ .wrap{padding:0 32px;} }
+@media (min-width:768px){ .wrap{padding:0 48px;} }
+
+header{position:fixed; top:0; right:0; left:0; z-index:500; padding:22px 0;}
+.navbar{display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-radius:14px; border:1px solid transparent;}
+.logo{font-weight:600; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
+.logo .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+nav.links{display:flex; gap:32px; font-size:14px; color:var(--text-2);}
+nav.links a{position:relative; transition:color .3s;}
+nav.links a:hover, nav.links a.active{color:#fff;}
+nav.links a.active::after{content:''; position:absolute; bottom:-4px; right:0; left:0; height:2px; background:var(--accent); border-radius:2px;}
+.mobile-menu-btn{display:none; background:none; border:none; color:#fff; font-size:24px; cursor:pointer; padding:8px;}
+@media (max-width:700px){
+  nav.links{display:none; position:absolute; top:100%; right:0; left:0; flex-direction:column; gap:0; background:rgba(5,5,5,.95); backdrop-filter:blur(16px); padding:16px; border-radius:14px; margin-top:8px;}
+  nav.links.open{display:flex;}
+  nav.links a{padding:12px 0; border-bottom:1px solid var(--border);}
+  .mobile-menu-btn{display:block;}
+}
+
+section{padding:80px 0; position:relative;}
+section:first-of-type{padding-top:160px;}
+
+.kicker{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.25em; color:var(--accent); text-transform:uppercase; margin-bottom:16px;}
+h1{font-size:clamp(32px,5vw,52px); font-weight:600; line-height:1.15; letter-spacing:-.01em; margin-bottom:20px;}
+h2{font-size:clamp(24px,3vw,36px); font-weight:600; line-height:1.2; letter-spacing:-.01em;}
+
+.glass{background:var(--glass); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:20px;}
+
+.btn{display:inline-flex; align-items:center; gap:10px; font-size:14px; transition:background .3s, color .3s, border-color .3s, transform .2s; cursor:pointer;}
+.btn-primary{background:#fff; color:#000; padding:14px 28px; border-radius:999px; font-weight:500; border:none;}
+.btn-primary:hover{background:rgba(255,255,255,.85); transform:translateY(-1px);}
+.btn-ghost{padding:14px 26px; border-radius:999px; border:1px solid var(--border-strong); background:var(--glass); backdrop-filter:blur(12px); color:var(--text);}
+
+.hero-content{max-width:700px;}
+.hero-content p{color:var(--text-2); font-size:18px; line-height:1.9; margin-bottom:20px;}
+
+.values-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-top:60px;}
+.value-card{padding:32px; border-radius:16px; background:var(--glass); border:1px solid var(--border); text-align:center;}
+.value-icon{width:64px; height:64px; background:var(--accent-soft); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:28px;}
+.value-card h3{font-size:18px; margin-bottom:12px;}
+.value-card p{color:var(--text-2); font-size:14px; line-height:1.7;}
+
+.timeline{position:relative; max-width:700px; margin:60px auto 0; padding-right:40px;}
+.timeline::before{content:''; position:absolute; right:0; top:0; bottom:0; width:2px; background:var(--border);}
+.timeline-item{margin-bottom:40px; position:relative;}
+.timeline-item::before{content:''; position:absolute; right:-44px; top:8px; width:12px; height:12px; background:var(--accent); border-radius:50%;}
+.timeline-year{font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--accent); margin-bottom:8px;}
+.timeline-item h3{font-size:18px; margin-bottom:8px;}
+.timeline-item p{color:var(--text-2); font-size:14px;}
+
+.team-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:24px; margin-top:60px;}
+.team-card{padding:32px; border-radius:16px; background:var(--glass); border:1px solid var(--border); text-align:center;}
+.team-avatar{width:100px; height:100px; background:var(--accent-soft); border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:36px;}
+.team-card h3{font-size:18px; margin-bottom:6px;}
+.team-card .role{color:var(--accent); font-size:14px; margin-bottom:12px;}
+.team-card p{color:var(--text-2); font-size:14px;}
+
+.cta-section{text-align:center; background:var(--glass-strong); border-radius:20px; padding:60px; margin-top:60px;}
+.cta-section h2{margin-bottom:16px;}
+.cta-section p{color:var(--text-2); margin-bottom:32px; font-size:18px; max-width:500px; margin-left:auto; margin-right:auto;}
+
+footer{background:var(--glass); border-top:1px solid var(--border); padding:60px 0 30px; margin-top:80px;}
+.footer-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px;}
+@media(max-width:768px){ .footer-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:480px){ .footer-grid{grid-template-columns:1fr;} }
+.footer-brand p{color:var(--text-2); font-size:14px; margin-top:16px; max-width:300px;}
+.footer-col h4{font-size:14px; font-weight:600; margin-bottom:16px; color:var(--text-2); text-transform:uppercase; letter-spacing:.1em;}
+.footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+.footer-col a{color:var(--text-2); font-size:14px; transition:color .3s;}
+.footer-col a:hover{color:#fff;}
+.footer-bottom{border-top:1px solid var(--border); padding-top:30px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; color:var(--text-2); font-size:13px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="navbar">
+      <a href="index.html" class="logo"><span class="dot"></span>Health<span>OS</span></a>
+      <button class="mobile-menu-btn" aria-label="القائمة">☰</button>
+      <nav class="links">
+        <a href="index.html">الرئيسية</a>
+        <a href="features.html">الميزات</a>
+        <a href="pricing.html">التسعير</a>
+        <a href="blog.html">المدونة</a>
+        <a href="faq.html">الأسئلة</a>
+      </nav>
+      <a href="#" data-nexa-plan="trial" class="btn btn-primary">ابدأ مجاناً</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section>
+  <div class="wrap">
+    <div class="kicker">من نحن</div>
+    <h1>نبني مستقبل الرعاية الصحية</h1>
+    <div class="hero-content">
+      <p>بدأنا HealthOS من فكرة بسيطة:“为什么 يستمثر الأطباء ساعات طويلة في الأعمال الورقية بدل ما يركزون على مرضاهم؟"</p>
+      <p>اليوم، نساعد أكثر من 500 عيادة في المنطقة العربية على تقديم رعاية صحية أفضل من خلال أتمتة العمليات وإدارة البيانات بكفاءة.</p>
+    </div>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h3>رسالتنا</h3>
+        <p>تمكين الأطباء والممارسين الصحيين من التركيز على ما يهم: رعاية مرضاهم. نقدم أدوات تقنية تجعل إدارة العيادة سهلة وفعالة.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">💡</div>
+        <h3>رؤيتنا</h3>
+        <p>أن نكون الخيار الأول لنظام إدارة العيادات في المنطقة العربية، بحلول تقنية متقدمة تلبي احتياجات السوق المحلي.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h3>قيمنا</h3>
+        <p>الشفافية، الابتكار، والتركيز على العميل. نبني علاقات طويلة المدى مع عملائنا ونعمل على نجاحهم.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--glass);">
+  <div class="wrap">
+    <h2 style="text-align:center;">رحلتنا</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">2021</div>
+        <h3>البداية</h3>
+        <p>انطلقنا بفكرة بسيطة ومكتب صغير. أول نسخة من HealthOS كانت لأطباء الأسنان فقط.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2022</div>
+        <h3>النمو الأول</h3>
+        <p>توسعنا لتشمل تخصصات أخرى. وصلنا لـ 50 عيادة. بدأنا نسمع قصص حقيقية عن توفير الوقت.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2023</div>
+        <h3>التوسع الإقليمي</h3>
+        <p>أطلقنا النسخة العربية الكاملة. بدأنا العمل في السعودية والإمارات. وصلنا لـ 200 عيادة.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2024</div>
+        <h3>الريادة</h3>
+        <p>أطلقنا تطبيقات الجوال. وصلنا لـ 500+ عيادة. مكنا أطباء من توفير أكثر من 10,000 ساعة سنوياً.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2025</div>
+        <h3>المستقبل</h3>
+        <p>نعمل على ميزات جديدة مبنية على الذكاء الاصطناعي. نبقى ملتزمين بتقديم أفضل الحلول.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 style="text-align:center;">فريقنا</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">👨‍💻</div>
+        <h3>أحمد الراشد</h3>
+        <div class="role">المؤسس والرئيس التنفيذي</div>
+        <p>خبرة 15 سنة في تقنية المعلومات الصحية. MBA من جامعة الملك فهد.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩‍💼</div>
+        <h3>سارة المنصور</h3>
+        <div class="role">مديرة المنتج</div>
+        <p>سابقاً في شركات تقنية عالمية. متخصصة في تجربة المستخدم.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👨‍🔧</div>
+        <h3>خالد العتيبي</h3>
+        <div class="role">مدير التقنية</div>
+        <p>مهندس برمجيات بخبرة في الأنظمة السحابية والأمان.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">👩‍🏫</div>
+        <h3>نورة القحطاني</h3>
+        <div class="role">مديرة دعم العملاء</div>
+        <p>ملتزمة بتقديم أفضل تجربة للمستخدمين. صوتكم المسموع.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="cta-section">
+      <h2>انضم إلى عائلة HealthOS</h2>
+      <p>أكثر من 500 عيادة تثق بنا. جرب HealthOS اليوم وابدأ رحلتك.</p>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="#" data-nexa-plan="trial" class="btn btn-primary">ابدأ مجاناً</a>
+        <a href="contact.html" class="btn btn-ghost">تواصل معنا</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="dot"></span>Health<span>OS</span></div>
+        <p>نظام تشغيل متكامل لإدارة عيادتك بكفاءة واحترافية.</p>
+      </div>
+      <div class="footer-col">
+        <h4>المنتج</h4>
+        <ul>
+          <li><a href="features.html">الميزات</a></li>
+          <li><a href="pricing.html">التسعير</a></li>
+          <li><a href="faq.html">الأسئلة</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>الشركة</h4>
+        <ul>
+          <li><a href="about.html">من نحن</a></li>
+          <li><a href="contact.html">تواصل معنا</a></li>
+          <li><a href="privacy.html">الخصوصية</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>المدونة</h4>
+        <ul>
+          <li><a href="blog.html">المقالات</a></li>
+          <li><a href="blog.html#tips">نصائح</a></li>
+          <li><a href="blog.html#updates">التحديثات</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 HealthOS. جميع الحقوق محفوظة.</span>
+      <div style="display:flex; gap:20px;">
+        <a href="privacy.html">سياسة الخصوصية</a>
+        <a href="terms.html">الشروط والأحكام</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var menuBtn = document.querySelector('.mobile-menu-btn');
+  var navLinks = document.querySelector('nav.links');
+  if(menuBtn && navLinks){
+    menuBtn.addEventListener('click', function(){
+      navLinks.classList.toggle('open');
+      menuBtn.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    });
+  }
+  var NEXA_LIVE = false;
+  document.querySelectorAll('[data-nexa-plan]').forEach(function(el){
+    if(NEXA_LIVE){
+      el.href = "https://subscribe.nexa.app/checkout?product=healthos&plan=" + el.dataset.nexaPlan;
+      el.target = '_blank';
+    }
+  });
+})();
+</script>
+</body>
+</html>

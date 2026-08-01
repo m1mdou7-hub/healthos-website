@@ -2,40 +2,77 @@
 
 موقع تسويقي لعرض ميزات HealthOS، مع أزرار اشتراك حقيقية تُحوّل المستخدم إلى **Nexa** (منصة إدارة الاشتراكات) — بدون أي دفع أو checkout داخل هذا الموقع نفسه (حسب الطلب).
 
-## قبل الرفع — خطوتين
+## بنية الموقع
 
-**1. حالة Nexa الحالية (غير مُطلق بعد):**
-كل أزرار الاشتراك ("اشترك الآن"، "ابدأ تجربة مجانية"، "ابدأ الآن") حاليًا تفتح نافذة "قريبًا" بدل ما تودّي لرابط ميت — تجمع بريد الزائر لحد ما Nexa يُطلق. ما فيه أي باك اند مربوط فعليًا بنموذج البريد هذا (لازم تربطه بخدمة زي Mailchimp/Resend أو جدول Supabase).
+### الصفحات
+| الملف | الوصف |
+|-------|-------|
+| `index.html` | الصفحة الرئيسية |
+| `pricing.html` | صفحة التسعير مع 3 باقات |
+| `features.html` | صفحة الميزات المتقدمة |
+| `blog.html` | صفحة المدونة والمقالات |
+| `faq.html` | الأسئلة الشائعة |
+| `about.html` | من نحن |
+| `contact.html` | نموذج تواصل معنا |
+| `privacy.html` | سياسة الخصوصية |
+| `terms.html` | الشروط والأحكام |
 
-**2. بمجرد إطلاق Nexa فعليًا:**
-افتح `index.html` ودوّر على هذا الجزء بالأعلى داخل `<script>`:
+### التقنيات المستخدمة
+- **HTML/CSS/JS** - بدون frameworks أو build tools
+- **Google Fonts** - IBM Plex Sans Arabic / Mono
+- **Supabase SDK** - لجمع الإيميلات (اختياري)
+- **Web Worker** - لتحسين أداء Canvas
+
+## الإعداد
+
+### 1. تفعيل Supabase لجمع الإيميلات
+1. أنشئ مشروع على [Supabase](https://supabase.com)
+2. أنشئ جدول `newsletter_subscribers`:
+   ```sql
+   CREATE TABLE newsletter_subscribers (
+     id BIGSERIAL PRIMARY KEY,
+     email TEXT NOT NULL UNIQUE,
+     subscribed_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   ```
+3. افتح `index.html` واستبدل القيم:
+   ```js
+   const SUPABASE_URL = 'https://xxxx.supabase.co';
+   const SUPABASE_KEY = 'مفتاحك-العام';
+   ```
+
+### 2. تفعيل Nexa للاشتراكات
+عند إطلاق Nexa، افتح أي ملف HTML واستبدل:
 ```js
-var NEXA_LIVE = false;                                    // ← غيّرها إلى true
-var NEXA_BASE = "https://subscribe.nexa.app/checkout";    // ← وحط رابط Nexa الحقيقي
-```
-بمجرد `NEXA_LIVE = true`، كل الأزرار تتحول تلقائيًا لتوديك مباشرة لـ Nexa (مع `?plan=...` حسب الباقة) بدل نافذة "قريبًا".
-
-## رفعه على GitHub (healthos-website)
-
-```bash
-git clone https://github.com/<username>/healthos-website.git
-cd healthos-website
-# انسخ index.html هنا
-git add .
-git commit -m "HealthOS marketing site"
-git push origin main
+var NEXA_LIVE = true;  // من false إلى true
+var NEXA_BASE = "https://subscribe.nexa.app/checkout";
 ```
 
 ## النشر على Vercel
 
-- استيراد الريبو مباشرة، بدون أي Framework Preset (Static/Other) — الموقع HTML خام بدون خطوة بناء.
-- Root Directory = جذر الريبو (طالما `index.html` بجذره مباشرة).
+```bash
+# استيراد الريبو مباشرة
+# اختر: Framework Preset = Other (Static)
+# Root Directory = /
+```
 
-## بنية الموقع
+## التطوير المحلي
 
-- ملف واحد (`index.html`) — CSS و JS مضمّنة، بدون أي خطوة تثبيت أو بناء.
-- الخطوط عبر Google Fonts CDN (IBM Plex Sans Arabic / Mono) — نفس خطوط تطبيق HealthOS نفسه، بدل Inter (لأن المحتوى عربي RTL حقيقي).
-- **لا يوجد GSAP أو أي مكتبة حركة خارجية** — كل الحركة عبر IntersectionObserver + requestAnimationFrame + Canvas API فقط، بنفس روح المرجع التقني.
-- خلفية "جوّية" (atmosphere) عبر Canvas تستجيب للسكرول (lerp-smoothed) بدل الفيديو المرجعي — لأنه ما فيه أصل فيديو مرخّص لنا نستخدمه.
-- نظام زجاجي (glassmorphism) حقيقي: `backdrop-filter: blur()` + حدود شفافة بيضاء، أزرار أساسية بيضاء/أسود، والذهبي (لون HealthOS) محصور بلمسات صغيرة فقط (الأرقام، الشارات، الكيكر) — لا تعبئات كبيرة.
-- المحتوى يعكس ميزات HealthOS الفعلية المبنية فقط (لا ميزات وهمية).
+```bash
+# أي خادم ثابت سيفي بالغرض
+python -m http.server 8000
+# أو
+npx serve
+```
+
+## الميزات المضافة حديثاً
+- ✅ صفحة التسعير مع مقارنة الميزات
+- ✅ صفحة المميزات المتقدمة
+- ✅ المدونة مع 6 مقالات
+- ✅ FAQ تفاعلي مع 15+ سؤال
+- ✅ صفحة من نحن
+- ✅ نموذج تواصل معنا
+- ✅ سياسة الخصوصية والشروط
+- ✅ Web Worker لأداء أفضل
+- ✅ Lazy loading للصور
+- ✅ تصميم متجاوب للجوال
