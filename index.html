@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HealthOS — نظام تشغيل عيادتك</title>
+<meta name="description" content="HealthOS — نظام تشغيل صحي متعدد المنظمات، تطبيق حقيقي على الكمبيوتر والجوال والتابلت." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /*
+    ملاحظة تصميم: البروبمت المرجعي (NovaAI) يحدد خط Inter صراحة. أبقينا على
+    IBM Plex Sans Arabic/Mono بدلاً منه لأن المحتوى عربي RTL حقيقي، وInter لا
+    يدعم العربية أصلاً — هذا هو نفس خط منتج HealthOS الفعلي، وليس اختيارًا عشوائيًا.
+    كل شيء آخر (نظام الزجاج، الألوان، الحركة، البنية) يتبع المرجع بدقة.
+  */
+  :root{
+    --bg:#050505;
+    --glass: rgba(255,255,255,.06);
+    --glass-strong: rgba(255,255,255,.10);
+    --border: rgba(255,255,255,.12);
+    --border-strong: rgba(255,255,255,.20);
+    --text:#ffffff;
+    --text-2: rgba(255,255,255,.65);
+    --text-3: rgba(255,255,255,.40);
+    --accent:#cba135;
+    --accent-soft: rgba(203,161,53,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{background:var(--bg); overflow-x:hidden;}
+  body{
+    color:var(--text); font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:400;
+    line-height:1.6; cursor:none;
+  }
+  ::selection{background:rgba(255,255,255,.2);}
+  .mono{font-family:'IBM Plex Mono', monospace; direction:ltr; unicode-bidi:plaintext;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 20px;}
+  @media (min-width:640px){ .wrap{padding:0 32px;} }
+  @media (min-width:768px){ .wrap{padding:0 48px;} }
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
+
+  /* ---------- cursor ---------- */
+  .cursor{position:fixed; top:0; left:0; width:14px; height:14px; border-radius:50%; background:#fff; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; transition:width .25s, height .25s;}
+  .cursor.ring{width:40px; height:40px; background:transparent; border:1px solid rgba(255,255,255,.5);}
+  @media (hover:none),(pointer:coarse){ .cursor{display:none;} body{cursor:auto;} }
+
+  /* ---------- preloader ---------- */
+  #preloader{position:fixed; inset:0; background:var(--bg); z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;}
+  #preloader .mark{font-size:12px; letter-spacing:.35em; color:var(--text-2); text-transform:uppercase;}
+  #preloader .count{font-family:'IBM Plex Mono',monospace; font-size:clamp(44px,9vw,84px); font-weight:500;}
+  #preloader .bar{width:min(280px,55vw); height:1px; background:var(--border); position:relative; overflow:hidden;}
+  #preloader .bar span{position:absolute; inset:0; width:0%; background:#fff;}
+
+  /* ---------- atmosphere canvas (replaces scroll-video system: no licensed video asset available,
+     so a scroll-reactive generative canvas gives the same cinematic/ambient role) ---------- */
+  #atmosphere{position:fixed; inset:0; z-index:0; pointer-events:none; background:var(--bg);}
+
+  /* ---------- glass system ---------- */
+  .glass{background:var(--glass); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border);}
+  .glass-strong{background:var(--glass-strong); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--border-strong);}
+  .badge{
+    display:inline-flex; align-items:center; gap:8px; padding:7px 14px 7px 16px;
+    border-right:2px solid #fff; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    letter-spacing:.15em; text-transform:uppercase; color:var(--text);
+  }
+
+  /* ---------- buttons (white primary / glass secondary — per design spec) ---------- */
+  .btn{display:inline-flex; align-items:center; gap:10px; font-size:14px; transition:background .3s, color .3s, border-color .3s, transform .2s;}
+  .btn-primary{background:#fff; color:#000; padding:14px 28px; border-radius:999px; font-weight:500;}
+  .btn-primary:hover{background:rgba(255,255,255,.85); transform:translateY(-1px);}
+  .btn-ghost{padding:14px 26px; border-radius:999px; border:1px solid var(--border-strong); background:var(--glass); backdrop-filter:blur(12px); color:var(--text);}
+  .btn-ghost:hover{background:var(--glass-strong);}
+  .btn-sm{padding:9px 18px; font-size:12px; border-radius:8px; border:1px solid var(--border); background:var(--glass); backdrop-filter:blur(10px);}
+  .btn-sm:hover{background:var(--glass-strong); border-color:var(--border-strong);}
+
+  header{position:fixed; top:0; right:0; left:0; z-index:500; padding:22px 0; transition:.4s;}
+  header.solid{padding:14px 0;}
+  header.solid .navbar{background:rgba(5,5,5,.6); backdrop-filter:blur(16px); border-color:var(--border);}
+  .navbar{display:flex; align-items:center; justify-content:space-between; padding:12px 20px; border-radius:14px; border:1px solid transparent; transition:.4s;}
+  .logo{font-weight:600; font-size:17px; letter-spacing:-.01em; display:flex; align-items:center; gap:8px;}
+  .logo .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);}
+  nav.links{display:flex; gap:32px; font-size:14px; color:var(--text-2);}
+  nav.links a{position:relative; transition:color .3s;}
+  nav.links a:hover{color:#fff;}
+
+  #scrollContent{will-change:transform;}
+
+  /* ---------- reveal system (IntersectionObserver, no GSAP) — real 3D tilt-in ---------- */
+  .reveal{
+    opacity:0; transform:perspective(1200px) translateY(40px) rotateX(8deg) scale(.98);
+    transform-origin:50% 100%;
+    transition:opacity .8s cubic-bezier(.16,.8,.24,1), transform .8s cubic-bezier(.16,.8,.24,1);
+  }
+  .reveal.in{opacity:1; transform:perspective(1200px) translateY(0) rotateX(0deg) scale(1);}
+
+  section{position:relative; padding:130px 0; z-index:1;}
+  .kicker{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.25em; color:var(--accent); text-transform:uppercase; margin-bottom:16px;}
+  h2.title{font-size:clamp(28px,4vw,50px); font-weight:600; line-height:1.15; letter-spacing:-.01em;}
+  h2.title em{font-style:normal; color:var(--text-2); font-weight:300;}
+  .lead{color:var(--text-2); font-size:16px; max-width:520px;}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:100vh; display:flex; flex-direction:column; justify-content:space-between; padding-top:130px; padding-bottom:56px;}
+  .hero-top{display:flex; flex-direction:column; gap:28px; margin-bottom:60px;}
+  @media(min-width:680px){ .hero-top{flex-direction:row; justify-content:space-between; align-items:flex-start;} }
+  .tag-list{display:flex; flex-direction:column; gap:8px;}
+  .tag-list span{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.85);}
+  .hero-intro{max-width:300px; font-size:17px; color:#fff;}
+  @media(min-width:680px){ .hero-intro{text-align:left;} }
+
+  .hero-bottom{display:flex; flex-direction:column; gap:40px;}
+  @media(min-width:900px){ .hero-bottom{flex-direction:row; align-items:flex-end; justify-content:space-between; gap:50px;} }
+  h1.display{font-size:clamp(40px,7.5vw,88px); font-weight:600; line-height:1.05; letter-spacing:-.01em; margin-top:18px;}
+  h1.display span{display:block; color:var(--text-2); font-weight:300;}
+
+  .hero-card{width:min(320px,100%); border-radius:18px; padding:20px; display:flex; flex-direction:column; gap:14px;}
+  .hero-card .tagline{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.2em; color:var(--accent); text-transform:uppercase;}
+  .hero-card .mock{border-radius:10px; background:rgba(255,255,255,.04); border:1px solid var(--border); padding:14px;}
+  .hero-card .mock .row{height:6px; border-radius:3px; background:rgba(255,255,255,.14); margin-bottom:8px;}
+  .hero-card .mock .row.short{width:55%;}
+  .hero-card h4{font-size:14px; font-weight:600;}
+  .hero-card p{font-size:12px; color:var(--text-2);}
+
+  .atmosphere-spacer{height:55vh;}
+
+  /* ---------- capability section ---------- */
+  .cap-top{display:flex; flex-direction:column; gap:22px; margin-bottom:70px;}
+  @media(min-width:768px){ .cap-top{flex-direction:row; justify-content:space-between; align-items:flex-start;} }
+  .cap-top .lead{max-width:360px;}
+  @media(min-width:768px){ .cap-top .lead{text-align:left;} }
+  .cap-bottom{display:flex; flex-direction:column; gap:44px;}
+  @media(min-width:960px){ .cap-bottom{flex-direction:row; align-items:flex-end; justify-content:space-between; gap:60px;} }
+  .cap-left{max-width:520px;}
+  .cap-left p.body{margin-top:20px; color:var(--text-2); font-size:15px; max-width:440px;}
+  .cap-ctas{display:flex; flex-wrap:wrap; gap:12px; margin-top:30px;}
+
+  .cap-panel{width:100%; max-width:440px; border-radius:18px; padding:8px 22px;}
+  .cap-row{display:flex; gap:18px; padding:20px 0; border-bottom:1px solid var(--border);}
+  .cap-row:last-child{border-bottom:none;}
+  .cap-idx{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-3); padding-top:2px;}
+  .cap-row h5{font-size:15px; font-weight:600; display:flex; align-items:center; gap:8px;}
+  .cap-row h5 svg{opacity:.4; transition:transform .3s, opacity .3s;}
+  .cap-row:hover h5 svg{transform:translateX(-3px); opacity:.9;}
+  .cap-row p{margin-top:6px; font-size:13px; color:var(--text-2); line-height:1.55;}
+
+  /* ---------- feature rows (detailed) ---------- */
+  .feat-row{display:grid; grid-template-columns:70px 1fr 300px; gap:30px; align-items:center; padding:30px 0; border-top:1px solid var(--border); transition:background .3s;}
+  .feat-row:last-child{border-bottom:1px solid var(--border);}
+  .feat-row:hover{background:rgba(255,255,255,.02);}
+  .feat-num{font-family:'IBM Plex Mono',monospace; color:var(--text-3); font-size:13px;}
+  .feat-title{font-size:clamp(18px,2.2vw,24px); font-weight:600; transition:color .3s, transform .3s;}
+  .feat-row:hover .feat-title{color:var(--accent); transform:translateX(-6px);}
+  .feat-desc{color:var(--text-2); font-size:14px;}
+  .feat-mono{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-3); text-align:left; direction:ltr; opacity:.8;}
+
+  /* ---------- process ---------- */
+  .steps{position:relative; padding-top:6px;}
+  .steps::before{content:""; position:absolute; top:12px; bottom:12px; right:13px; width:1px; background:var(--border);}
+  .steps .fill{position:absolute; top:12px; right:13px; width:1px; background:#fff; height:0%;}
+  .step{position:relative; padding-right:54px; padding-bottom:50px;}
+  .step:last-child{padding-bottom:0;}
+  .step-dot{position:absolute; right:0; top:0; width:27px; height:27px; border-radius:50%; border:1px solid var(--border); background:var(--bg); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-3);}
+  .step.in .step-dot{border-color:#fff; color:#fff;}
+  .step h3{font-size:20px; font-weight:600; margin-bottom:6px;}
+  .step p{color:var(--text-2); max-width:480px; font-size:14px;}
+
+  /* ---------- platforms ---------- */
+  .device-stage{position:relative; height:520px; margin-top:56px; display:flex; align-items:center; justify-content:center; perspective:1800px; transform-style:preserve-3d;}
+  .device{position:absolute; border-radius:14px; overflow:hidden; transition:transform .15s linear; transform-style:preserve-3d; box-shadow:0 50px 100px -30px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.04);}
+  .device .bar{height:10px; background:rgba(255,255,255,.04); display:flex; align-items:center; gap:5px; padding:0 10px; border-bottom:1px solid var(--border);}
+  .device .bar i{width:5px;height:5px;border-radius:50%;background:var(--text-3);}
+  .device .screen{padding:16px;}
+  .device .brand{font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.25em; color:var(--accent); margin-bottom:10px;}
+  .device .card-mock{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:8px; padding:14px;}
+  .device .card-mock h4{font-size:13px; font-weight:600; margin-bottom:10px;}
+  .device .row-mock{height:6px; background:rgba(255,255,255,.12); border-radius:3px; margin-bottom:7px;}
+  .device .row-mock.short{width:60%;}
+  .device .btn-mock{margin-top:12px; background:#fff; color:#000; font-size:10px; text-align:center; padding:7px; border-radius:5px; font-weight:600;}
+  .device.desktop{width:460px; height:290px; right:calc(50% - 30px); transform:translateX(50%) rotateY(-6deg) rotateX(2deg);}
+  .device.tablet{width:220px; height:290px; right:calc(50% + 200px); transform:translateX(50%) rotateY(10deg) rotateX(2deg); z-index:2;}
+  .device.phone{width:135px; height:270px; right:calc(50% - 250px); transform:translateX(50%) rotateY(-14deg) rotateX(2deg); z-index:2;}
+  .platform-caption{text-align:center; margin-top:24px; color:var(--text-2); font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em;}
+  .platform-caption b{color:#fff; font-family:'IBM Plex Sans Arabic'; font-weight:600;}
+
+  /* ---------- trust ---------- */
+  .trust-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden;}
+  .trust-card{background:var(--bg); padding:32px 26px;}
+  .trust-card .n{font-family:'IBM Plex Mono',monospace; font-size:28px; color:var(--accent); margin-bottom:10px;}
+  .trust-card .t{font-size:14px; font-weight:600; margin-bottom:6px;}
+  .trust-card .d{font-size:12px; color:var(--text-2);}
+
+  /* ---------- pricing ---------- */
+  .price-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .price-card{border-radius:16px; padding:32px 26px; position:relative;}
+  .price-card.hi{border-color:var(--border-strong); background:rgba(255,255,255,.09);}
+  .price-card .tag{position:absolute; top:-11px; left:26px; background:var(--accent); color:#000; font-size:10px; padding:4px 12px; border-radius:999px; font-weight:600;}
+  .price-card h3{font-size:14px; color:var(--text-2); font-weight:500; margin-bottom:14px; letter-spacing:.03em;}
+  .price-card .amount{font-family:'IBM Plex Mono',monospace; font-size:34px; margin-bottom:6px;}
+  .price-card .amount span{font-size:13px; color:var(--text-2);}
+  .price-card .note{color:var(--text-2); font-size:12px; margin-bottom:22px;}
+  .price-card ul{list-style:none; display:flex; flex-direction:column; gap:10px; margin-bottom:24px;}
+  .price-card li{font-size:13px; display:flex; gap:9px; align-items:flex-start;}
+  .price-card li::before{content:"—"; color:var(--accent); flex-shrink:0;}
+  .price-btn{display:block; text-align:center;}
+  .pricing-foot{margin-top:24px; text-align:center; color:var(--text-2); font-size:12px;}
+  .pricing-foot .mono{color:var(--accent);}
+
+  /* ---------- contact ---------- */
+  .contact{text-align:center;}
+  .contact h2{font-size:clamp(30px,5.5vw,64px); font-weight:600; line-height:1.1;}
+  .contact h2 em{font-style:normal; color:var(--text-2); font-weight:300;}
+  .contact .lead{margin:22px auto 0;}
+  .contact .btn{margin-top:38px;}
+
+  footer{border-top:1px solid var(--border); padding:44px 0; position:relative; z-index:1;}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:18px;}
+  footer .fmono{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-2);}
+  footer .flinks{display:flex; gap:24px; font-size:12px; color:var(--text-2);}
+  footer .flinks a:hover{color:#fff;}
+
+  @media (max-width:880px){
+    nav.links{display:none;}
+    .feat-row{grid-template-columns:40px 1fr; row-gap:8px;}
+    .feat-mono{display:none;}
+    .trust-grid{grid-template-columns:1fr 1fr;}
+    .price-grid{grid-template-columns:1fr;}
+    .device-stage{height:auto; flex-direction:column; gap:36px; padding:20px 0;}
+    .device{position:static !important; transform:none !important; margin:0 auto;}
+    .device.desktop{width:90vw; max-width:360px; height:230px;}
+    .device.tablet,.device.phone{width:190px; height:230px;}
+  }
+
+  /* ---------- coming soon modal ---------- */
+  .cs-modal{position:fixed; inset:0; z-index:9998; display:none; align-items:center; justify-content:center; padding:20px;}
+  .cs-modal.open{display:flex;}
+  .cs-backdrop{position:absolute; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(6px);}
+  .cs-box{position:relative; z-index:1; width:min(420px,100%); border-radius:18px; padding:36px 32px; text-align:center; background:rgba(20,20,20,.7); backdrop-filter:blur(24px); border:1px solid var(--border-strong);}
+  .cs-box .kicker{justify-content:center; display:flex;}
+  .cs-box h3{font-size:21px; font-weight:600; margin-bottom:10px;}
+  .cs-box p{color:var(--text-2); font-size:13px; margin-bottom:22px;}
+  #csForm{display:flex; flex-direction:column; gap:12px;}
+  #csForm input{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:8px; padding:13px 14px; color:#fff; font-family:'IBM Plex Sans Arabic'; font-size:14px; text-align:center;}
+  #csForm input:focus{outline:none; border-color:#fff;}
+  #csForm button{background:#fff; color:#000; border:none; border-radius:8px; padding:13px; font-weight:600; font-family:'IBM Plex Sans Arabic'; font-size:14px; cursor:pointer; transition:background .3s;}
+  #csForm button:hover{background:rgba(255,255,255,.85);}
+  .cs-done{display:none; color:var(--accent); font-size:13px; padding:8px 0;}
+  .cs-close{position:absolute; top:14px; left:14px; background:none; border:none; color:var(--text-2); font-size:16px; cursor:pointer; width:28px; height:28px; border-radius:50%;}
+  .cs-close:hover{background:rgba(255,255,255,.08); color:#fff;}
+</style>
+</head>
+<body>
+
+<canvas id="atmosphere"></canvas>
+<div class="cursor" id="cursorDot"></div>
+<div class="cursor ring" id="cursorRing"></div>
+
+<div id="preloader">
+  <div class="mark">HealthOS</div>
+  <div class="count mono"><span id="pctNum">0</span>%</div>
+  <div class="bar"><span id="pctBar"></span></div>
+</div>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <div class="navbar">
+      <div class="logo"><span class="dot"></span>Health<span>OS</span></div>
+      <nav class="links">
+        <a href="#capability">المنصة</a>
+        <a href="#features">المزايا</a>
+        <a href="#process">كيف يعمل</a>
+        <a href="#pricing">الاشتراك</a>
+        <a href="#contact">تواصل</a>
+      </nav>
+      <a href="#" data-nexa-plan="trial" class="btn btn-sm">ابدأ تجربة مجانية</a>
+    </div>
+  </div>
+</header>
+
+<div id="scrollContent">
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-top">
+        <div class="tag-list reveal" data-delay="150">
+          <span>/ إدارة المرضى والمواعيد</span>
+          <span>/ السجلات السريرية والعلاج</span>
+          <span>/ الفوترة والمخزون</span>
+        </div>
+        <p class="hero-intro reveal" data-delay="300">نصمم نظام تشغيل يمنح عيادتك وضوحًا ودقة وكفاءة في كل عملية — من أول موعد إلى آخر فاتورة.</p>
+      </div>
+
+      <div class="hero-bottom">
+        <div>
+          <div class="badge glass reveal" data-delay="150">يُشغّل أكثر من عيادة بعزل تام</div>
+          <h1 class="display reveal" data-delay="280">عيادتك تستحق نظامًا<span>لا تطبيقًا مؤجرًا.</span></h1>
+        </div>
+
+        <div class="hero-card glass-strong reveal" data-delay="420">
+          <div class="tagline">HEALTHOS · CLINICAL WORKSPACE</div>
+          <div class="mock">
+            <div class="row"></div>
+            <div class="row short"></div>
+          </div>
+          <h4>مساحة العمل السريرية</h4>
+          <p>ملف مريض، خطة علاج، وفاتورة — بنفس المكان.</p>
+          <a href="#contact" class="btn btn-primary" style="margin-top:4px; padding:11px 20px; font-size:13px;">احجز عرضًا حيًا ←</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="atmosphere-spacer" aria-hidden="true"></div>
+
+  <section id="capability">
+    <div class="wrap">
+      <div class="cap-top">
+        <div class="badge glass reveal" data-delay="120">تغطية كاملة</div>
+        <p class="lead reveal" data-delay="220" style="font-size:18px; color:#fff;">نظامنا لا يكتفي بالتخزين — يربط كل موديول بالتالي له، فلا تتكرر البيانات ولا تضيع بين الاستقبال والعيادة والمحاسبة.</p>
+      </div>
+
+      <div class="cap-bottom">
+        <div class="cap-left">
+          <h2 class="title reveal" data-delay="180">كل شيء.<br><em>متصل. بذكاء.</em></h2>
+          <p class="body reveal" data-delay="320">من أول تسجيل مريض إلى آخر فاتورة، كل موديول في HealthOS مبني ليتحدث مع الذي بجانبه — دون كود متشابك ودون بيانات مكررة.</p>
+          <div class="cap-ctas reveal" data-delay="420">
+            <a href="#features" class="btn btn-primary">استعرض المزايا كاملة ←</a>
+            <a href="#contact" class="btn btn-ghost">تواصل مع الفريق</a>
+          </div>
+        </div>
+
+        <div class="cap-panel glass reveal" data-delay="300">
+          <div class="cap-row" style="--i:0">
+            <div class="cap-idx">01</div>
+            <div><h5>المرضى والمواعيد <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></h5><p>ملف مريض كامل وحجز بدون تعارض أوقات.</p></div>
+          </div>
+          <div class="cap-row" style="--i:1">
+            <div class="cap-idx">02</div>
+            <div><h5>السجلات السريرية <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></h5><p>ملاحظات موقّعة وقابلة للقفل، وإضافات لاحقة دون مساس بالأصل.</p></div>
+          </div>
+          <div class="cap-row" style="--i:2">
+            <div class="cap-idx">03</div>
+            <div><h5>الفوترة والمخزون <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></h5><p>فاتورة وبنودها بعملية واحدة ذرّية، ومخزون يحدّث نفسه.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="reveal" data-delay="0" style="margin-bottom:60px;">
+        <div class="kicker">02 · المزايا التفصيلية</div>
+        <h2 class="title">نظام تشغيل <em>كامل</em> للعيادة.</h2>
+      </div>
+      <div id="featList"></div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="wrap">
+      <div class="reveal" data-delay="0" style="margin-bottom:60px;">
+        <div class="kicker">03 · كيف يعمل</div>
+        <h2 class="title">من أول تسجيل دخول <em>إلى أول فاتورة.</em></h2>
+      </div>
+      <div class="steps" id="stepsWrap">
+        <div class="fill" id="stepsFill"></div>
+        <div class="step reveal"><div class="step-dot mono">01</div><h3>أنشئ منظمتك وفروعها</h3><p>عيادة واحدة أو مجموعة فروع — كل شيء تحت مظلة واحدة معزولة تمامًا.</p></div>
+        <div class="step reveal"><div class="step-dot mono">02</div><h3>ادعُ فريقك وحدّد الأدوار</h3><p>طبيب، استقبال، فني مختبر، محاسب — كل عضو له صلاحيات دقيقة.</p></div>
+        <div class="step reveal"><div class="step-dot mono">03</div><h3>استقبل المرضى وجدول المواعيد</h3><p>حجز بدون تعارض أوقات، وقائمة انتظار ذكية عند الازدحام.</p></div>
+        <div class="step reveal"><div class="step-dot mono">04</div><h3>وثّق العمل السريري</h3><p>ملاحظات SOAP، خطط علاج، ورسم سني — كل شيء موصول بملف المريض.</p></div>
+        <div class="step reveal"><div class="step-dot mono">05</div><h3>حصّل وتابع</h3><p>فاتورة بضمان اتساق كامل، ومخزون يحدّث نفسه تلقائيًا.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="platforms">
+    <div class="wrap">
+      <div class="reveal" data-delay="0" style="text-align:center; margin:0 auto 0; display:flex; flex-direction:column; align-items:center;">
+        <div class="kicker">04 · المنصات</div>
+        <h2 class="title" style="text-align:center;">تطبيق واحد، <em>على كل أجهزتك.</em></h2>
+        <p class="lead" style="text-align:center; margin-top:14px;">لا حاجة لفتح متصفح ولا اتصال دائم بالإنترنت — HealthOS يعمل حيث تعمل عيادتك.</p>
+      </div>
+      <div class="device-stage reveal" id="deviceStage">
+        <div class="device tablet glass" id="devTablet"><div class="bar"><i></i><i></i><i></i></div><div class="screen"><div class="brand">TABLET</div><div class="card-mock"><h4>سجل المريض</h4><div class="row-mock"></div><div class="row-mock short"></div><div class="btn-mock">فتح الملف</div></div></div></div>
+        <div class="device desktop glass" id="devDesktop"><div class="bar"><i></i><i></i><i></i></div><div class="screen"><div class="brand">DESKTOP</div><div class="card-mock"><h4>مرحبًا، د. سارة</h4><div class="row-mock"></div><div class="row-mock short"></div><div class="btn-mock">تسجيل الخروج</div></div></div></div>
+        <div class="device phone glass" id="devPhone"><div class="bar"><i></i><i></i><i></i></div><div class="screen"><div class="brand">MOBILE</div><div class="card-mock"><h4>المواعيد</h4><div class="row-mock"></div><div class="row-mock short"></div><div class="btn-mock">تأكيد الحضور</div></div></div></div>
+      </div>
+      <div class="platform-caption reveal">حرّك الفأرة فوق الأجهزة — <b>الكمبيوتر · التابلت · الجوال</b>، نفس النظام في كل مكان.</div>
+    </div>
+  </section>
+
+  <section id="trust">
+    <div class="wrap">
+      <div class="reveal" data-delay="0" style="margin-bottom:60px;">
+        <div class="kicker">05 · البنية والثقة</div>
+        <h2 class="title">مو وعود تسويقية، <em>هذي المعمارية فعليًا.</em></h2>
+      </div>
+      <div class="trust-grid reveal">
+        <div class="trust-card"><div class="n mono">RLS</div><div class="t">عزل على مستوى القاعدة</div><div class="d">كل استعلام محصور تلقائيًا بمنظمتك.</div></div>
+        <div class="trust-card"><div class="n mono">100%</div><div class="t">سجل تدقيق</div><div class="d">أي تعديل حسّاس يُسجَّل تلقائيًا.</div></div>
+        <div class="trust-card"><div class="n mono">RBAC</div><div class="t">صلاحيات مرنة</div><div class="d">دور مختلف لكل عيادة ينتمي إليها المستخدم.</div></div>
+        <div class="trust-card"><div class="n mono">AR</div><div class="t">عربي أولًا</div><div class="d">RTL حقيقي وخطوط تدعم العربية فعليًا.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="reveal" data-delay="0" style="margin-bottom:60px;">
+        <div class="kicker">06 · الاشتراك</div>
+        <h2 class="title">خطة تناسب <em>حجم عيادتك.</em></h2>
+        <p class="lead" style="margin-top:14px;">إدارة الاشتراكات والفوترة عبر Nexa.</p>
+      </div>
+      <div class="price-grid reveal">
+        <div class="price-card glass">
+          <h3>عيادة مستقلة</h3>
+          <div class="amount">—<span> / شهريًا</span></div>
+          <div class="note">لعيادة بفرع واحد وفريق صغير</div>
+          <ul><li>فرع واحد</li><li>حتى 5 أعضاء فريق</li><li>كل الموديولات الأساسية</li><li>دعم عبر البريد</li></ul>
+          <a href="#" data-nexa-plan="solo-clinic" class="btn btn-primary price-btn">اشترك الآن</a>
+        </div>
+        <div class="price-card glass hi">
+          <div class="tag">الأكثر ملاءمة</div>
+          <h3>مجموعة عيادات</h3>
+          <div class="amount">—<span> / شهريًا</span></div>
+          <div class="note">لعدة فروع وفرق أكبر</div>
+          <ul><li>فروع غير محدودة</li><li>أعضاء فريق غير محدودين</li><li>تقارير إدارية متقدمة</li><li>دعم ذو أولوية</li></ul>
+          <a href="#" data-nexa-plan="multi-branch" class="btn btn-primary price-btn">اشترك الآن</a>
+        </div>
+        <div class="price-card glass">
+          <h3>مؤسسي</h3>
+          <div class="amount">مخصّص</div>
+          <div class="note">لسلاسل عيادات كبرى ومتطلبات خاصة</div>
+          <ul><li>استضافة مخصّصة عند الحاجة</li><li>تكاملات خاصة</li><li>اتفاقية مستوى خدمة (SLA)</li><li>مدير حساب مخصّص</li></ul>
+          <a href="#contact" class="btn btn-ghost price-btn">تحدّث مع فريقنا</a>
+        </div>
+      </div>
+      <div class="pricing-foot reveal">إدارة الاشتراكات والفوترة عبر <span class="mono">Nexa</span> — المنصة قيد الإطلاق حاليًا.</div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="reveal" data-delay="0">
+        <div class="kicker" style="justify-content:center; display:flex;">تواصل</div>
+        <h2>خطوتك القادمة <em>تحتاج نظامًا.</em></h2>
+        <p class="lead" style="margin-left:auto;margin-right:auto;">أخبرنا عن عيادتك، وسنساعدك تنتقل إليها بدون مخاطرة على بياناتك.</p>
+        <a href="mailto:hello@healthos.app" class="btn btn-primary">راسلنا الآن ←</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fmono">© HealthOS — جميع الحقوق محفوظة</div>
+    <div class="flinks">
+      <a href="#capability">المنصة</a>
+      <a href="#features">المزايا</a>
+      <a href="#pricing">الاشتراك</a>
+      <a href="mailto:hello@healthos.app">البريد</a>
+    </div>
+  </div>
+</footer>
+</div>
+<!-- /#scrollContent -->
+
+
+<div class="cs-modal" id="comingSoonModal">
+  <div class="cs-backdrop" data-close></div>
+  <div class="cs-box">
+    <div class="kicker">قريبًا</div>
+    <h3>الاشتراك يفتح قريبًا عبر Nexa</h3>
+    <p>منصة إدارة الاشتراكات (Nexa) قيد الإطلاق حاليًا. اترك بريدك وبنعلمك أول ما يفتح الاشتراك.</p>
+    <form id="csForm">
+      <input type="email" required placeholder="بريدك الإلكتروني" dir="ltr" />
+      <button type="submit">أعلمني عند الإطلاق</button>
+    </form>
+    <div class="cs-done" id="csDone">تم! بنراسلك أول ما يفتح الاشتراك.</div>
+    <button class="cs-close" data-close aria-label="إغلاق">✕</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ====== Nexa لسه ما أُطلق. بمجرد الإطلاق: NEXA_LIVE = true + رابطه الحقيقي ======
+  var NEXA_LIVE = false;
+  var NEXA_BASE = "https://subscribe.nexa.app/checkout";
+  function nexaUrl(plan){ return NEXA_BASE + "?product=healthos&plan=" + encodeURIComponent(plan); }
+
+  document.querySelectorAll('[data-nexa-plan]').forEach(function(el){
+    if(NEXA_LIVE){
+      el.setAttribute('href', nexaUrl(el.getAttribute('data-nexa-plan')));
+      el.setAttribute('target','_blank'); el.setAttribute('rel','noopener');
+    } else {
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        document.getElementById('comingSoonModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    }
+  });
+  var csModal = document.getElementById('comingSoonModal');
+  csModal.addEventListener('click', function(e){
+    if(e.target.hasAttribute('data-close')){ csModal.classList.remove('open'); document.body.style.overflow=''; }
+  });
+  document.getElementById('csForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    // ملاحظة: لا يوجد باك اند مربوط فعليًا هنا — اربطه لاحقًا بخدمة بريد أو جدول Supabase.
+    this.style.display = 'none';
+    document.getElementById('csDone').style.display = 'block';
+  });
+
+  // ---------- feature rows (real modules) ----------
+  var features = [
+    ["01","المرضى","ملف مريض كامل — بيانات، حساسيات، تاريخ طبي، وحالة نشطة/مؤرشفة.","modules/patients"],
+    ["02","المواعيد","حجز بدون تعارض أوقات، تأكيد حضور لحظي، وقائمة انتظار ذكية.","modules/appointments"],
+    ["03","السجلات السريرية","ملاحظات SOAP قابلة للتوقيع والقفل، وإضافات لاحقة دون مساس بالأصل.","modules/clinical"],
+    ["04","خطط العلاج والرسم السني","بنود علاج بتكلفة تقديرية، وحالة كل سن موثّقة لحظيًا.","modules/dental"],
+    ["05","المختبر والأشعة","تتبّع حالات المختبر من الاستلام للتسليم، وأرشفة صور الأشعة.","modules/lab · modules/radiology"],
+    ["06","الفوترة","فاتورة وبنودها بعملية واحدة ذرّية — لا فاتورة ناقصة أبدًا.","modules/billing"],
+    ["07","المخزون","حركات دخول وخروج تُحدّث الرصيد تلقائيًا، وتنبيه عند نفاد الصنف.","modules/inventory"],
+    ["08","الإشعارات وقائمة الانتظار","تذكير مواعيد تلقائي، وإدارة ذكية لأوقات الازدحام.","modules/notifications"]
+  ];
+  var list = document.getElementById('featList');
+  features.forEach(function(f){
+    var row = document.createElement('div');
+    row.className = 'feat-row reveal';
+    row.innerHTML = '<div class="feat-num mono">'+f[0]+'</div><div><div class="feat-title">'+f[1]+'</div><div class="feat-desc">'+f[2]+'</div></div><div class="feat-mono">'+f[3]+'</div>';
+    list.appendChild(row);
+  });
+
+  // ---------- preloader ----------
+  var pctNum = document.getElementById('pctNum'), pctBar = document.getElementById('pctBar'), pre = document.getElementById('preloader');
+  var n = 0;
+  var iv = setInterval(function(){
+    n += Math.ceil(Math.random()*9)+3;
+    if(n>=100){ n=100; clearInterval(iv); }
+    pctNum.textContent = n; pctBar.style.width = n+'%';
+    if(n===100){
+      setTimeout(function(){
+        pre.style.transition='opacity .6s ease, visibility .6s ease';
+        pre.style.opacity='0'; pre.style.visibility='hidden';
+        document.body.style.overflow='';
+        initReveals();
+      }, 300);
+    }
+  }, 90);
+
+  // ---------- custom cursor ----------
+  var dot=document.getElementById('cursorDot'), ring=document.getElementById('cursorRing');
+  var rx=0, ry=0, mx=0, my=0;
+  window.addEventListener('mousemove', function(e){ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  (function loop(){ rx+=(mx-rx)*0.15; ry+=(my-ry)*0.15; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(loop); })();
+  document.querySelectorAll('a,.feat-row,.price-card,.device,.cap-row').forEach(function(el){
+    el.addEventListener('mouseenter', function(){ ring.style.width='60px'; ring.style.height='60px'; });
+    el.addEventListener('mouseleave', function(){ ring.style.width='40px'; ring.style.height='40px'; });
+  });
+
+  // ---------- header on scroll ----------
+  var header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', function(){ header.classList.toggle('solid', window.scrollY>40); });
+
+  // ---------- device stage: idle 3D float (always running) + mouse tilt blended on top ----------
+  var stage = document.getElementById('deviceStage');
+  var devs = [
+    { el: document.getElementById('devDesktop'), baseRy:-6, baseRx:2, depth:10, phase:0 },
+    { el: document.getElementById('devTablet'),  baseRy:10, baseRx:2, depth:16, phase:2.1 },
+    { el: document.getElementById('devPhone'),   baseRy:-14,baseRx:2, depth:16, phase:4.2 }
+  ];
+  var mousePx=0, mousePy=0, mouseTargetPx=0, mouseTargetPy=0;
+  stage.addEventListener('mousemove', function(e){
+    var r = stage.getBoundingClientRect();
+    mouseTargetPx = (e.clientX-r.left)/r.width-0.5;
+    mouseTargetPy = (e.clientY-r.top)/r.height-0.5;
+  });
+  stage.addEventListener('mouseleave', function(){ mouseTargetPx=0; mouseTargetPy=0; });
+
+  var t0 = performance.now();
+  function deviceLoop(now){
+    mousePx += (mouseTargetPx-mousePx)*0.06;
+    mousePy += (mouseTargetPy-mousePy)*0.06;
+    var t = (now-t0)/1000;
+    devs.forEach(function(d){
+      var idleY = Math.sin(t*0.5 + d.phase) * 2.2;      // تمايل بطيء مستمر
+      var idleX = Math.cos(t*0.4 + d.phase) * 1.1;
+      var idleFloat = Math.sin(t*0.6 + d.phase) * 6;    // طفو رأسي خفيف
+      var ry = d.baseRy + idleY + mousePx*d.depth;
+      var rx = d.baseRx + idleX - mousePy*d.depth*0.6;
+      d.el.style.transform = 'translateX(50%) translateY('+idleFloat+'px) rotateY('+ry+'deg) rotateX('+rx+'deg)';
+    });
+    requestAnimationFrame(deviceLoop);
+  }
+  requestAnimationFrame(deviceLoop);
+
+  // ---------- smooth-scroll lag (visual glide, real scroll untouched — safe for a11y & anchors) ----------
+  var scrollContent = document.getElementById('scrollContent');
+  var realY = window.scrollY, smoothY = window.scrollY;
+  window.addEventListener('scroll', function(){ realY = window.scrollY; }, {passive:true});
+  function smoothScrollLoop(){
+    smoothY += (realY-smoothY)*0.09;
+    var diff = realY - smoothY;
+    scrollContent.style.transform = 'translateY('+diff.toFixed(2)+'px)';
+    requestAnimationFrame(smoothScrollLoop);
+  }
+  requestAnimationFrame(smoothScrollLoop);
+
+  // ---------- reveals (IntersectionObserver, no GSAP) ----------
+  function initReveals(){
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var el = entry.target;
+          var delay = el.getAttribute('data-delay') || 0;
+          setTimeout(function(){ el.classList.add('in'); }, parseInt(delay,10));
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+    var stepIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('in'); stepIo.unobserve(entry.target); }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.step').forEach(function(el){ stepIo.observe(el); });
+  }
+
+  // ---------- process fill line (scroll progress, lerped, no GSAP) ----------
+  var stepsWrap = document.getElementById('stepsWrap'), stepsFill = document.getElementById('stepsFill');
+  var fillTarget = 0, fillCurrent = 0;
+  function computeFill(){
+    var r = stepsWrap.getBoundingClientRect();
+    var vh = window.innerHeight;
+    var total = r.height;
+    var visible = Math.min(Math.max(vh*0.6 - r.top, 0), total);
+    fillTarget = total>0 ? (visible/total)*100 : 0;
+  }
+  window.addEventListener('scroll', computeFill);
+  window.addEventListener('resize', computeFill);
+  (function fillLoop(){
+    fillCurrent += (fillTarget-fillCurrent)*0.12;
+    stepsFill.style.height = fillCurrent+'%';
+    requestAnimationFrame(fillLoop);
+  })();
+
+  // ---------- atmosphere canvas: scroll-reactive generative background ----------
+  // بديل لنظام الفيديو المُستَخدَم بالمرجع (لا يوجد أصل فيديو مرخّص لدينا) —
+  // نفس المبدأ التقني (تنعيم lerp + requestAnimationFrame + استجابة للسكرول)
+  // لكن عبر Canvas API بدل إطارات فيديو.
+  var canvas = document.getElementById('atmosphere');
+  var ctx = canvas.getContext('2d');
+  var W, H, dpr;
+  var particles = [];
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var PCOUNT = window.innerWidth < 700 ? 26 : 46;
+  for(var i=0;i<PCOUNT;i++){
+    particles.push({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*1.6+0.4,
+      vx: (Math.random()-0.5)*0.06, vy: (Math.random()-0.5)*0.06,
+      gold: Math.random() < 0.22
+    });
+  }
+  var scrollTarget=0, scrollSmooth=0;
+  window.addEventListener('scroll', function(){
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    scrollTarget = max>0 ? window.scrollY/max : 0;
+  });
+
+  function drawAtmosphere(){
+    scrollSmooth += (scrollTarget-scrollSmooth)*0.06;
+    ctx.clearRect(0,0,W,H);
+
+    // ambient glow blobs, drifting slowly, position tied to smoothed scroll
+    var g1 = ctx.createRadialGradient(W*0.75, H*(0.25+scrollSmooth*0.3), 0, W*0.75, H*(0.25+scrollSmooth*0.3), W*0.5);
+    g1.addColorStop(0, 'rgba(203,161,53,0.10)');
+    g1.addColorStop(1, 'rgba(203,161,53,0)');
+    ctx.fillStyle = g1; ctx.fillRect(0,0,W,H);
+
+    var g2 = ctx.createRadialGradient(W*0.2, H*(0.7-scrollSmooth*0.25), 0, W*0.2, H*(0.7-scrollSmooth*0.25), W*0.45);
+    g2.addColorStop(0, 'rgba(255,255,255,0.045)');
+    g2.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g2; ctx.fillRect(0,0,W,H);
+
+    particles.forEach(function(p){
+      p.x += p.vx; p.y += p.vy - scrollSmooth*0.02;
+      if(p.x<0) p.x=W; if(p.x>W) p.x=0;
+      if(p.y<0) p.y=H; if(p.y>H) p.y=0;
+      ctx.beginPath();
+      ctx.fillStyle = p.gold ? 'rgba(203,161,53,0.55)' : 'rgba(255,255,255,0.35)';
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    });
+
+    requestAnimationFrame(drawAtmosphere);
+  }
+  drawAtmosphere();
+})();
+</script>
+</body>
+</html>
