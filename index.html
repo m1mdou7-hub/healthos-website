@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HealthOS — نظام تشغيل عيادتك</title>
-<meta name="description" content="HealthOS — نظام تشغيل صحي متعدد المنظمات، تطبيق حقيقي على الكمبيوتر والجوال والتابلت." />
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%23cba135'/><text x='16' y='21' text-anchor='middle' fill='%23000' font-size='14' font-weight='bold'>H</text></svg>" />
+<title>Medca — نظام تشغيل عيادتك</title>
+<meta name="description" content="Medca — نظام تشغيل صحي متعدد المنظمات، تطبيق حقيقي على الكمبيوتر والجوال والتابلت." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230A0A0A'/><polygon points='2.7,28 2.7,4 7.3,4 7.3,18.7 16,8 24.7,18.7 24.7,4 29.3,4 29.3,28 24.7,28 24.7,12.7 16,23.3 7.3,12.7 7.3,28' fill='%23FAFAFA'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   /*
     ملاحظة تصميم: البروبمت المرجعي (NovaAI) يحدد خط Inter صراحة. أبقينا على
     IBM Plex Sans Arabic/Mono بدلاً منه لأن المحتوى عربي RTL حقيقي، وInter لا
-    يدعم العربية أصلاً — هذا هو نفس خط منتج HealthOS الفعلي، وليس اختيارًا عشوائيًا.
+    يدعم العربية أصلاً — هذا هو نفس خط منتج Medca الفعلي، وليس اختيارًا عشوائيًا.
     كل شيء آخر (نظام الزجاج، الألوان، الحركة، البنية) يتبع المرجع بدقة.
   */
   :root{
-    --bg:#050505;
+    --bg:#0A0A0A;
     --glass: rgba(255,255,255,.06);
     --glass-strong: rgba(255,255,255,.10);
     --border: rgba(255,255,255,.12);
@@ -27,20 +27,20 @@
     --text:#ffffff;
     --text-2: rgba(255,255,255,.75);
     --text-3: rgba(255,255,255,.50);
-    --accent:#cba135;
-    --accent-hover: #d4b04a;
-    --accent-soft: rgba(203,161,53,.16);
-    --glow: 0 0 40px rgba(203,161,53,.15);
-    --glow-strong: 0 0 60px rgba(203,161,53,.25);
+    --accent:#FAFAFA;
+    --accent-hover: #E5E5E5;
+    --accent-soft: rgba(250,250,250,.16);
+    --glow: 0 0 40px rgba(250,250,250,.15);
+    --glow-strong: 0 0 60px rgba(250,250,250,.25);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   html,body{background:var(--bg); overflow-x:hidden;}
   body{
-    color:var(--text); font-family:'IBM Plex Sans Arabic', sans-serif; font-weight:400;
+    color:var(--text); font-family:'Tajawal', sans-serif; font-weight:400;
     line-height:1.7; cursor:none;
   }
-  ::selection{background:rgba(203,161,53,.3);}
+  ::selection{background:rgba(250,250,250,.3);}
   .mono{font-family:'IBM Plex Mono', monospace; direction:ltr; unicode-bidi:plaintext;}
   a{color:inherit; text-decoration:none; transition:color .3s;}
   button{font-family:inherit;}
@@ -130,7 +130,7 @@
   .btn{display:inline-flex; align-items:center; gap:10px; font-size:14px; transition:all .3s cubic-bezier(.4,0,.2,1); cursor:pointer; position:relative; overflow:hidden;}
   .btn-primary{
     background:linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-    color:#000; padding:14px 28px; border-radius:999px; font-weight:600;
+    color:#000; padding:14px 28px; border-radius:2px; font-weight:600;
     box-shadow:0 4px 15px rgba(255,255,255,.15);
   }
   .btn-primary:hover{
@@ -140,7 +140,7 @@
   }
   .btn-primary:active{transform:translateY(0);}
   .btn-ghost{
-    padding:14px 26px; border-radius:999px; border:1px solid var(--border-strong);
+    padding:14px 26px; border-radius:2px; border:1px solid var(--border-strong);
     background:var(--glass); backdrop-filter:blur(12px); color:var(--text);
   }
   .btn-ghost:hover{
@@ -152,7 +152,7 @@
   .btn-sm:hover{background:var(--glass-strong); border-color:var(--accent); transform:translateY(-1px);}
   .btn-accent{
     background:linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
-    color:#000; padding:14px 28px; border-radius:999px; font-weight:600;
+    color:#000; padding:14px 28px; border-radius:2px; font-weight:600;
     box-shadow:var(--glow);
   }
   .btn-accent:hover{
@@ -292,7 +292,7 @@
   .device.tablet{width:220px; height:290px; right:calc(50% + 200px); transform:translateX(50%) rotateY(10deg) rotateX(2deg); z-index:2;}
   .device.phone{width:135px; height:270px; right:calc(50% - 250px); transform:translateX(50%) rotateY(-14deg) rotateX(2deg); z-index:2;}
   .platform-caption{text-align:center; margin-top:24px; color:var(--text-2); font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em;}
-  .platform-caption b{color:#fff; font-family:'IBM Plex Sans Arabic'; font-weight:600;}
+  .platform-caption b{color:#fff; font-family:'Tajawal'; font-weight:600;}
 
   /* ---------- trust ---------- */
   .trust-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:14px; overflow:hidden;}
@@ -305,7 +305,7 @@
   .price-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
   .price-card{border-radius:16px; padding:32px 26px; position:relative;}
   .price-card.hi{border-color:var(--border-strong); background:rgba(255,255,255,.09);}
-  .price-card .tag{position:absolute; top:-11px; left:26px; background:var(--accent); color:#000; font-size:10px; padding:4px 12px; border-radius:999px; font-weight:600;}
+  .price-card .tag{position:absolute; top:-11px; left:26px; background:var(--accent); color:#000; font-size:10px; padding:4px 12px; border-radius:2px; font-weight:600;}
   .price-card h3{font-size:14px; color:var(--text-2); font-weight:500; margin-bottom:14px; letter-spacing:.03em;}
   .price-card .amount{font-family:'IBM Plex Mono',monospace; font-size:34px; margin-bottom:6px;}
   .price-card .amount span{font-size:13px; color:var(--text-2);}
@@ -351,9 +351,9 @@
   .cs-box h3{font-size:21px; font-weight:600; margin-bottom:10px;}
   .cs-box p{color:var(--text-2); font-size:13px; margin-bottom:22px;}
   #csForm{display:flex; flex-direction:column; gap:12px;}
-  #csForm input{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:8px; padding:13px 14px; color:#fff; font-family:'IBM Plex Sans Arabic'; font-size:14px; text-align:center;}
+  #csForm input{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:8px; padding:13px 14px; color:#fff; font-family:'Tajawal'; font-size:14px; text-align:center;}
   #csForm input:focus{outline:none; border-color:#fff;}
-  #csForm button{background:#fff; color:#000; border:none; border-radius:8px; padding:13px; font-weight:600; font-family:'IBM Plex Sans Arabic'; font-size:14px; cursor:pointer; transition:background .3s;}
+  #csForm button{background:#fff; color:#000; border:none; border-radius:8px; padding:13px; font-weight:600; font-family:'Tajawal'; font-size:14px; cursor:pointer; transition:background .3s;}
   #csForm button:hover{background:rgba(255,255,255,.85);}
   .cs-done{display:none; color:var(--accent); font-size:13px; padding:8px 0;}
   .cs-close{position:absolute; top:14px; left:14px; background:none; border:none; color:var(--text-2); font-size:16px; cursor:pointer; width:28px; height:28px; border-radius:50%;}
@@ -367,7 +367,7 @@
 <div class="cursor ring" id="cursorRing"></div>
 
 <div id="preloader">
-  <div class="mark">HealthOS</div>
+  <div class="mark">Medca</div>
   <div class="count mono"><span id="pctNum">0</span>%</div>
   <div class="bar"><span id="pctBar"></span></div>
 </div>
@@ -375,7 +375,7 @@
 <header id="siteHeader">
   <div class="wrap">
     <div class="navbar">
-      <a href="index.html" class="logo"><span class="dot"></span>Health<span>OS</span></a>
+      <a href="index.html" class="logo"><svg width="20" height="20" viewBox="0 0 240 240" fill="none" style="flex-shrink:0;"><polygon points="20,210 20,30 55,30 55,140 120,60 185,140 185,30 220,30 220,210 185,210 185,95 120,175 55,95 55,210" fill="var(--text)"/><polygon points="55,140 120,60 120,175 55,95" fill="var(--text-3)" opacity="0.6"/><polygon points="185,140 120,60 120,175 185,95" fill="var(--text-3)" opacity="0.9"/></svg>Medca</a>
       <button class="mobile-menu-btn" aria-label="القائمة">☰</button>
       <nav class="links">
         <a href="index.html">الرئيسية</a>
@@ -434,7 +434,7 @@
       <div class="cap-bottom">
         <div class="cap-left">
           <h2 class="title reveal" data-delay="180">كل شيء.<br><em>متصل. بذكاء.</em></h2>
-          <p class="body reveal" data-delay="320">من أول تسجيل مريض إلى آخر فاتورة، كل موديول في HealthOS مبني ليتحدث مع الذي بجانبه — دون كود متشابك ودون بيانات مكررة.</p>
+          <p class="body reveal" data-delay="320">من أول تسجيل مريض إلى آخر فاتورة، كل موديول في Medca مبني ليتحدث مع الذي بجانبه — دون كود متشابك ودون بيانات مكررة.</p>
           <div class="cap-ctas reveal" data-delay="420">
             <a href="#features" class="btn btn-primary">استعرض المزايا كاملة ←</a>
             <a href="#contact" class="btn btn-ghost">تواصل مع الفريق</a>
@@ -491,7 +491,7 @@
       <div class="reveal" data-delay="0" style="text-align:center; margin:0 auto 0; display:flex; flex-direction:column; align-items:center;">
         <div class="kicker">04 · المنصات</div>
         <h2 class="title" style="text-align:center;">تطبيق واحد، <em>على كل أجهزتك.</em></h2>
-        <p class="lead" style="text-align:center; margin-top:14px;">لا حاجة لفتح متصفح ولا اتصال دائم بالإنترنت — HealthOS يعمل حيث تعمل عيادتك.</p>
+        <p class="lead" style="text-align:center; margin-top:14px;">لا حاجة لفتح متصفح ولا اتصال دائم بالإنترنت — Medca يعمل حيث تعمل عيادتك.</p>
       </div>
       <div class="device-stage reveal" id="deviceStage">
         <div class="device tablet glass" id="devTablet"><div class="bar"><i></i><i></i><i></i></div><div class="screen"><div class="brand">TABLET</div><div class="card-mock"><h4>سجل المريض</h4><div class="row-mock"></div><div class="row-mock short"></div><div class="btn-mock">فتح الملف</div></div></div></div>
@@ -590,7 +590,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="fmono">© HealthOS — جميع الحقوق محفوظة</div>
+    <div class="fmono">© Medca — جميع الحقوق محفوظة</div>
     <div class="flinks">
       <a href="#capability">المنصة</a>
       <a href="#features">المزايا</a>
@@ -908,8 +908,8 @@
     ctx.clearRect(0,0,W,H);
 
     var g1 = ctx.createRadialGradient(W*0.75, H*(0.25+smooth*0.3), 0, W*0.75, H*(0.25+smooth*0.3), W*0.5);
-    g1.addColorStop(0, 'rgba(203,161,53,0.10)');
-    g1.addColorStop(1, 'rgba(203,161,53,0)');
+    g1.addColorStop(0, 'rgba(250,250,250,0.10)');
+    g1.addColorStop(1, 'rgba(250,250,250,0)');
     ctx.fillStyle = g1; ctx.fillRect(0,0,W,H);
 
     var g2 = ctx.createRadialGradient(W*0.2, H*(0.7-smooth*0.25), 0, W*0.2, H*(0.7-smooth*0.25), W*0.45);
@@ -919,7 +919,7 @@
 
     particlesData.forEach(function(p){
       ctx.beginPath();
-      ctx.fillStyle = p.gold ? 'rgba(203,161,53,0.55)' : 'rgba(255,255,255,0.35)';
+      ctx.fillStyle = p.gold ? 'rgba(250,250,250,0.55)' : 'rgba(255,255,255,0.35)';
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
       ctx.fill();
     });
