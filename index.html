@@ -358,6 +358,23 @@
   .cs-done{display:none; color:var(--accent); font-size:13px; padding:8px 0;}
   .cs-close{position:absolute; top:14px; left:14px; background:none; border:none; color:var(--text-2); font-size:16px; cursor:pointer; width:28px; height:28px; border-radius:50%;}
   .cs-close:hover{background:rgba(255,255,255,.08); color:#fff;}
+
+  /* ---------- FAQ ---------- */
+  .faq-nav{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:40px;}
+  .faq-nav-btn{padding:10px 20px; border-radius:2px; background:var(--glass); border:1px solid var(--border); color:var(--text-2); font-size:14px; cursor:pointer; transition:all .3s; font-family:inherit;}
+  .faq-nav-btn:hover, .faq-nav-btn.active{background:var(--accent); color:#000; border-color:var(--accent);}
+  .faq-category{margin-bottom:60px;}
+  .faq-category h2{margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--border);}
+  .faq-item{background:var(--glass); border:1px solid var(--border); border-radius:16px; margin-bottom:12px; overflow:hidden; transition:border-color .3s;}
+  .faq-item:hover{border-color:var(--border-strong);}
+  .faq-item.open{border-color:var(--accent);}
+  .faq-item.open .faq-q svg{transform:rotate(180deg);}
+  .faq-item.open .faq-a{max-height:500px;}
+  .faq-q{display:flex; align-items:center; justify-content:space-between; padding:20px 24px; cursor:pointer; font-weight:500; font-size:16px; gap:16px;}
+  .faq-q svg{width:20px; height:20px; flex-shrink:0; transition:transform .3s; color:var(--accent);}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .4s ease; color:var(--text-2); font-size:15px; line-height:1.8;}
+  .faq-a p{padding:0 24px 24px;}
+
 </style>
 </head>
 <body>
@@ -375,14 +392,14 @@
 <header id="siteHeader">
   <div class="wrap">
     <div class="navbar">
-      <a href="index.html" class="logo"><svg width="20" height="20" viewBox="0 0 240 240" fill="none" style="flex-shrink:0;"><polygon points="20,210 20,30 55,30 55,140 120,60 185,140 185,30 220,30 220,210 185,210 185,95 120,175 55,95 55,210" fill="var(--text)"/><polygon points="55,140 120,60 120,175 55,95" fill="var(--text-3)" opacity="0.6"/><polygon points="185,140 120,60 120,175 185,95" fill="var(--text-3)" opacity="0.9"/></svg>Medca</a>
+      <a href="index.html" class="logo"><svg width="20" height="20" viewBox="0 0 240 240" fill="none" style="flex-shrink:0;"><polygon points="20,210 20,30 55,30 55,140 120,60 185,140 185,30 220,30 220,210 185,210 185,95 120,175 55,95 55,210" fill="var(--text)"/><polygon points="55,140 120,60 120,175 55,95" fill="var(--text-3)" opacity="0.6"/><polygon points="185,140 120,60 120,175 185,95" fill="var(--text-3)" opacity="0.9"/></svg><span style="display:flex; flex-direction:column; line-height:1.05;">Medca<span style="font-size:9px; letter-spacing:.18em; color:var(--text-3); font-weight:600;">HEALTH</span></span></a>
       <button class="mobile-menu-btn" aria-label="القائمة">☰</button>
       <nav class="links">
-        <a href="index.html">الرئيسية</a>
-        <a href="features.html">الميزات</a>
-        <a href="pricing.html">التسعير</a>
+        <a href="#">الرئيسية</a>
+        <a href="#features">الميزات</a>
+        <a href="#pricing">التسعير</a>
         <a href="blog.html">المدونة</a>
-        <a href="faq.html">الأسئلة</a>
+        <a href="#faq">الأسئلة</a>
       </nav>
       <a href="#" data-nexa-plan="trial" class="btn btn-sm">ابدأ تجربة مجانية</a>
     </div>
@@ -553,6 +570,129 @@
     </div>
   </section>
 
+  <section id="faq">
+    <div class="wrap">
+      <div class="reveal" data-delay="0" style="margin-bottom:44px;">
+        <div class="kicker">06 · الأسئلة الشائعة</div>
+        <h2 class="title">إجابات <em>على أسئلتك.</em></h2>
+      </div>
+      <div class="faq-nav">
+      <button class="faq-nav-btn active" data-target="all">الكل</button>
+      <button class="faq-nav-btn" data-target="general">عامة</button>
+      <button class="faq-nav-btn" data-target="pricing">التسعير</button>
+      <button class="faq-nav-btn" data-target="features">الميزات</button>
+      <button class="faq-nav-btn" data-target="technical">تقني</button>
+      <button class="faq-nav-btn" data-target="support">الدعم</button>
+    </div>
+      <div class="faq-category" data-category="general">
+      <h2>أسئلة عامة</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">ما هو Medca؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>Medca هو نظام إدارة عيادات متكامل يساعدك على إدارة المرضى والمواعيد والسجلات السريرية والفوترة والمخزون من مكان واحد. يعمل على جميع الأجهزة: الكمبيوتر، التابلت، والجوال.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يناسب Medca لجميع التخصصات؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، تم تصميم Medca ليكون مرناً ويعمل مع جميع التخصصات الطبية: طب الأسنان، العيون، الجلدية، العظام، الأطفال، وغيرها. قوالب SOAP قابلة للتخصيص حسب تخصصك.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكنني تجربة Medca قبل الاشتراك؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>بالتأكيد! نقدم تجربة مجانية 14 يوماً بدون بطاقة ائتمان. يمكنك تجربة جميع الميزات وإلغاء الاشتراك متى ما تريد.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-category" data-category="pricing">
+      <h2>التسعير والدفع</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">كم تكلفة Medca؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نقدم ثلاث باقات: ستاندرد (149 ر.س/شهر)، برو (399 ر.س/شهر)، ومؤسسي (سعر مخصص). الدفع السنوي يوفر 20%. <a href="#pricing" style="color:var(--accent);">عرض الأسعار</a></p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يوجد رسوم إضافية؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>لا، السعر شامل كل شيء. لا رسوم إعداد، لا رسوم خفية، ولا تكاليف إضافية للميزات المشمولة في باقتك.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">ما هي طرق الدفع المتاحة؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نقبل الدفع بالفيزا، ماستركارد، مدى، والتحويل البنكي. الدفع الشهري عبر البطاقة فقط.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكنني تغيير الباقة أو الإلغاء؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، يمكنك الترقية أو التخفيض في أي وقت. يمكنك أيضاً إلغاء الاشتراك متى ما تريد دون أي رسوم إلغاء.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-category" data-category="features">
+      <h2>الميزات والاستخدام</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">هل يوجد تطبيق للجوال؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، تطبيقات iOS و Android متاحة مجاناً. توفر جميع الميزات الأساسية مع واجهة محسّنة للشاشات الصغيرة.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكن إرسال تذكيرات للمواعيد؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، يمكن إرسال تذكيرات SMS و WhatsApp تلقائياً قبل الموعد. يمكنك تخصيص وقت التذكير (24 ساعة، ساعة، 30 دقيقة قبل).</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يدعم النظام اللغة العربية بالكامل؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، Medca مصمم عربياً من الألف إلى الياء. واجهة RTL كاملة، تواريخ هجرية، عملات محلية، وطباعة بالعربي.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكن تصدير التقارير؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، جميع التقارير قابلة للتصدير بتنسيقات PDF و Excel و CSV.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-category" data-category="technical">
+      <h2>الأسئلة التقنية</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">هل البيانات آمنة؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، نعتمد معايير أمان عالية: تشفير AES-256، نسخ احتياطي يومي، وتوافق مع معايير HIPAA لحماية البيانات الصحية.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يحتاج النظام اتصال إنترنت؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، Medca يعمل عبر السحابة (Cloud). تحتاج اتصال إنترنت للوصول لبياناتك. التطبيق يدعم وضع offline محدود للعرض فقط.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل يمكن التكامل مع أنظمة أخرى؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، نقدم API للتكامل مع الأنظمة الأخرى. التكامل مع الصيدليات والمختبرات والأشعة متاح في الباقات المتقدمة.</p></div>
+      </div>
+    </div>
+
+    <div class="faq-category" data-category="support">
+      <h2>الدعم الفني</h2>
+      
+      <div class="faq-item">
+        <div class="faq-q">كيف يمكنني التواصل مع الدعم؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نقدم دعماً عبر البريد الإلكتروني والدردشة المباشرة. باقة البرو تحصل على دعم 24/7.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">هل تقدمون تدريب على النظام؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>نعم، نقدم فيديوهات تعليمية ومقالات في مركز المساعدة. الباقة المؤسسية تحصل على تدريب مباشر للفريق.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q">ماذا لو فقدت بيانات؟<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg></div>
+        <div class="faq-a"><p>لديك نسخ احتياطي يومي. في حالة فقدان بيانات، يمكننا استرجاعها من آخر نسخة احتياطية. انتقد مركز المساعدة فوراً.</p></div>
+      </div>
+    </div>
+
+    
+    </div>
+  </section>
+
   <section class="contact" id="contact">
     <div class="wrap">
       <div class="reveal" data-delay="0">
@@ -567,15 +707,15 @@
 
 <!-- Mobile Bottom Navigation -->
 <nav class="bottom-nav">
-  <a href="index.html" class="bottom-nav-item active">
+  <a href="#" class="bottom-nav-item active">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span>الرئيسية</span>
   </a>
-  <a href="features.html" class="bottom-nav-item">
+  <a href="#features" class="bottom-nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
     <span>الميزات</span>
   </a>
-  <a href="pricing.html" class="bottom-nav-item">
+  <a href="#pricing" class="bottom-nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
     <span>التسعير</span>
   </a>
@@ -583,7 +723,7 @@
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     <span>المدونة</span>
   </a>
-  <a href="contact.html" class="bottom-nav-item">
+  <a href="#contact" class="bottom-nav-item">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     <span>تواصل</span>
   </a>
@@ -754,6 +894,30 @@
       a.addEventListener('click', function(){ navLinks.classList.remove('open'); menuBtn.textContent = '☰'; });
     });
   }
+
+  // ---------- FAQ accordion + filter ----------
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      var item = q.parentElement;
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+      if(!isOpen){ item.classList.add('open'); }
+    });
+  });
+  (function(){
+    var navBtns = document.querySelectorAll('.faq-nav-btn');
+    var categories = document.querySelectorAll('.faq-category');
+    navBtns.forEach(function(btn){
+      btn.addEventListener('click', function(){
+        navBtns.forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        var target = btn.dataset.target;
+        categories.forEach(function(cat){
+          cat.style.display = (target === 'all' || cat.dataset.category === target) ? '' : 'none';
+        });
+      });
+    });
+  })();
 
   // ---------- device stage: idle 3D float (always running) + mouse tilt blended on top ----------
   var stage = document.getElementById('deviceStage');
